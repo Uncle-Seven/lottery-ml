@@ -3,15 +3,8 @@ name: 🎱 Update Lottery Data
 
 on:
   schedule:
-    # 每天 UTC 14:30 (北京时间 22:30) 运行
     - cron: '30 14 * * *'
-  workflow_dispatch:  # 支持手动触发
-    inputs:
-      force_update:
-        description: 'Force update even if no new data'
-        required: false
-        default: 'false'
-        type: boolean
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -35,10 +28,21 @@ jobs:
       - name: 📦 Install dependencies
         run: pip install -r requirements.txt
       
+      - name: 🔧 Initialize data files
+        run: |
+          mkdir -p docs/data
+          # 确保 history.json 存在且是有效的 JSON
+          if [ ! -f docs/data/history.json ] || [ ! -s docs/data/history.json ]; then
+            echo "[]" > docs/data/history.json
+            echo "📁 初始化 history.json"
+          fi
+          # 验证 JSON 格式
+          python -c "import json; json.load(open('docs/data/history.json'))" || echo "[]" > docs/data/history.json
+      
       - name: 🕷️ Fetch latest data
         run: python scripts/fetch_data.py
         env:
-          DATA_URL: ${{ secrets.DATA_URL }}  # 可选：通过 secrets 配置数据URL
+          DATA_URL: ${{ secrets.DATA_URL }}
       
       - name: 📊 Generate analysis and predictions
         run: python scripts/generate_all.py
@@ -49,7 +53,6 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add docs/data/
           
-          # 检查是否有变化
           if git diff --staged --quiet; then
             echo "📭 No changes to commit"
           else
@@ -70,7 +73,7 @@ jobs:
       - name: 📥 Checkout
         uses: actions/checkout@v4
         with:
-          ref: main  # 确保获取最新提交
+          ref: main
       
       - name: 🔧 Setup Pages
         uses: actions/configure-pages@v4
