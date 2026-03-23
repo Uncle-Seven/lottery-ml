@@ -8,7 +8,7 @@ from pathlib import Path
 from lib.parser import SSQDataParser
 
 # ⚠️ 替换为实际的数据URL
-DATA_URL = "https://xxx/ssq_data.js"
+DATA_URL = "https://uncle-seven.github.io/caipiao-calculator/ssq_data.js"
 
 class DataFetcher:
     def __init__(self, data_url: str = DATA_URL):
