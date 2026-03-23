@@ -1,1 +1,85 @@
+# .github/workflows/update.yml
+name: 🎱 Update Lottery Data
 
+on:
+  schedule:
+    # 每天 UTC 14:30 (北京时间 22:30) 运行
+    - cron: '30 14 * * *'
+  workflow_dispatch:  # 支持手动触发
+    inputs:
+      force_update:
+        description: 'Force update even if no new data'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: 📦 Install dependencies
+        run: pip install -r requirements.txt
+      
+      - name: 🕷️ Fetch latest data
+        run: python scripts/fetch_data.py
+        env:
+          DATA_URL: ${{ secrets.DATA_URL }}  # 可选：通过 secrets 配置数据URL
+      
+      - name: 📊 Generate analysis and predictions
+        run: python scripts/generate_all.py
+      
+      - name: 📤 Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/data/
+          
+          # 检查是否有变化
+          if git diff --staged --quiet; then
+            echo "📭 No changes to commit"
+          else
+            git commit -m "📊 Update data $(date +'%Y-%m-%d %H:%M')"
+            git push
+            echo "📬 Changes committed and pushed"
+          fi
+
+  deploy-pages:
+    needs: update-data
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main  # 确保获取最新提交
+      
+      - name: 🔧 Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: 📦 Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'docs'
+      
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
