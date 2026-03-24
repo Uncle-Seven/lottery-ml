@@ -449,20 +449,95 @@ class LotteryPredictor:
 
 
 class Backtester:
-    """回测器 - 支持多策略对比"""
+    """回测器 - 支持单式和复式"""
     
     def __init__(self, history: List[Dict]):
         self.history = history
     
-    def run_single_strategy(self, strategy_name: str, strategy_func, 
-                            test_periods: int = 50, red_count: int = 6, 
-                            blue_count: int = 1) -> Dict:
-        """运行单个策略的回测"""
+    def _calculate_match(self, pred_red: List[int], pred_blue, 
+                         actual_red: List[int], actual_blue: int) -> Dict:
+        """
+        计算命中情况
+        
+        参数:
+            pred_red: 预测红球列表 (6-20个)
+            pred_blue: 预测蓝球 (单个或列表)
+            actual_red: 实际红球 (6个)
+            actual_blue: 实际蓝球 (1个)
+        """
+        # 红球命中
+        actual_red_set = set(actual_red)
+        pred_red_set = set(pred_red)
+        red_match = len(pred_red_set & actual_red_set)
+        
+        # 蓝球命中
+        if isinstance(pred_blue, list):
+            blue_match = 1 if actual_blue in pred_blue else 0
+        else:
+            blue_match = 1 if pred_blue == actual_blue else 0
+        
+        # 计算中奖等级 (基于6红1蓝标准)
+        prize = self._calculate_prize(red_match, blue_match, len(pred_red), 
+                                       len(pred_blue) if isinstance(pred_blue, list) else 1)
+        
+        return {
+            'red_match': red_match,
+            'blue_match': blue_match,
+            'prize': prize
+        }
+    
+    def _calculate_prize(self, red_match: int, blue_match: int, 
+                         red_count: int, blue_count: int) -> str:
+        """
+        计算中奖等级
+        
+        单式 (6+1): 直接判断
+        复式: 需要红球命中>=6 才算一等奖可能
+        """
+        # 对于复式，我们计算的是"覆盖到正确号码"的能力
+        if red_count == 6:
+            # 单式标准
+            if red_match == 6 and blue_match:
+                return '一等奖'
+            elif red_match == 6:
+                return '二等奖'
+            elif red_match == 5 and blue_match:
+                return '三等奖'
+            elif red_match == 5 or (red_match == 4 and blue_match):
+                return '四等奖'
+            elif red_match == 4 or (red_match == 3 and blue_match):
+                return '五等奖'
+            elif blue_match:
+                return '六等奖'
+        else:
+            # 复式：判断是否"包含"中奖组合
+            if red_match >= 6 and blue_match:
+                return '一等奖(含)'
+            elif red_match >= 6:
+                return '二等奖(含)'
+            elif red_match >= 5 and blue_match:
+                return '三等奖(含)'
+            elif red_match >= 5:
+                return '四等奖(含)'
+            elif red_match >= 4:
+                return '五等奖(含)'
+            elif blue_match:
+                return '六等奖'
+        
+        return None
+    
+    def run_single_strategy(self, strategy_name: str, strategy_func,
+                            test_periods: int, red_count: int, 
+                            blue_count: int) -> Dict:
+        """运行单个策略回测"""
         results = {
             'strategy': strategy_name,
+            'red_count': red_count,
+            'blue_count': blue_count,
             'red_matches': [],
             'blue_matches': [],
-            'distribution': {i: 0 for i in range(red_count + 1)},
+            'prizes': [],
+            'distribution': {},
             'details': []
         }
         
@@ -470,45 +545,48 @@ class Backtester:
             train_data = self.history[:i]
             actual = self.history[i]
             
+            if len(train_data) < 30:
+                continue
+            
             predictor = LotteryPredictor(train_data)
             pred = strategy_func(predictor, red_count, blue_count)
             
-            # 计算红球命中
-            actual_red = set(actual['red'])
-            pred_red = set(pred['red'])
-            red_match = len(pred_red & actual_red)
+            match_result = self._calculate_match(
+                pred['red'], pred['blue'],
+                actual['red'], actual['blue']
+            )
             
-            # 计算蓝球命中
-            pred_blue = pred['blue'] if isinstance(pred['blue'], int) else pred['blue']
-            if isinstance(pred_blue, list):
-                blue_match = 1 if actual['blue'] in pred_blue else 0
-            else:
-                blue_match = 1 if pred_blue == actual['blue'] else 0
+            red_match = match_result['red_match']
+            blue_match = match_result['blue_match']
             
             results['red_matches'].append(red_match)
             results['blue_matches'].append(blue_match)
-            results['distribution'][red_match] = results['distribution'].get(red_match, 0) + 1
+            results['prizes'].append(match_result['prize'])
+            
+            # 分布统计
+            key = str(red_match)
+            results['distribution'][key] = results['distribution'].get(key, 0) + 1
             
             results['details'].append({
                 'period': actual['period'],
                 'predicted_red': pred['red'],
-                'predicted_blue': pred_blue,
+                'predicted_blue': pred['blue'],
                 'actual_red': actual['red'],
                 'actual_blue': actual['blue'],
                 'red_match': red_match,
-                'blue_match': blue_match
+                'blue_match': blue_match,
+                'prize': match_result['prize']
             })
         
         return results
     
-    def run_all_strategies(self, test_periods: int = 50, 
-                           red_count: int = 6, blue_count: int = 1) -> Dict:
-        """运行所有策略的回测对比"""
-        
+    def run_comparison(self, test_periods: int = 50) -> Dict:
+        """
+        运行单式 vs 复式对比回测
+        """
         if len(self.history) < test_periods + 50:
             test_periods = max(10, len(self.history) - 50)
         
-        # 定义所有策略
         strategies = {
             '智能加权': lambda p, r, b: p.predict_weighted(r, b),
             '三区均衡': lambda p, r, b: p.predict_zone_balanced(r, b),
@@ -518,97 +596,118 @@ class Backtester:
             '连号感知': lambda p, r, b: p.predict_consecutive_aware(r, b),
         }
         
-        # 运行各策略
-        strategy_results = {}
+        # 单式回测 (6红1蓝)
+        print("  📊 回测单式 (6红1蓝)...")
+        single_results = {}
         for name, func in strategies.items():
-            print(f"  回测策略: {name}...")
-            result = self.run_single_strategy(
-                name, func, test_periods, red_count, blue_count
-            )
-            
-            avg_red = np.mean(result['red_matches'])
-            avg_blue = np.mean(result['blue_matches'])
-            
-            strategy_results[name] = {
+            result = self.run_single_strategy(name, func, test_periods, 6, 1)
+            avg_red = np.mean(result['red_matches']) if result['red_matches'] else 0
+            avg_blue = np.mean(result['blue_matches']) if result['blue_matches'] else 0
+            single_results[name] = {
                 'avg_red_match': round(avg_red, 4),
                 'blue_accuracy': round(avg_blue, 4),
                 'distribution': result['distribution'],
-                'details': result['details'][-5:]  # 保留最近5期详情
+                'details': result['details'][-5:]
             }
         
-        # 随机基准对比
-        random_matches = []
-        rng = np.random.default_rng()
-        for _ in range(test_periods * 100):
-            rand_red = set(rng.choice(range(1, 34), 6, replace=False))
-            actual_idx = rng.integers(len(self.history))
-            actual_red = set(self.history[actual_idx]['red'])
-            random_matches.append(len(rand_red & actual_red))
+        # 复式回测 (7红3蓝)
+        print("  📊 回测复式 (7红3蓝)...")
+        duplex_results = {}
+        for name, func in strategies.items():
+            result = self.run_single_strategy(name, func, test_periods, 7, 3)
+            avg_red = np.mean(result['red_matches']) if result['red_matches'] else 0
+            avg_blue = np.mean(result['blue_matches']) if result['blue_matches'] else 0
+            
+            # 计算复式中奖统计
+            prize_count = len([p for p in result['prizes'] if p])
+            
+            duplex_results[name] = {
+                'avg_red_match': round(avg_red, 4),
+                'blue_accuracy': round(avg_blue, 4),
+                'prize_hit_rate': round(prize_count / max(len(result['prizes']), 1), 4),
+                'distribution': result['distribution'],
+                'details': result['details'][-5:]
+            }
         
-        random_avg = np.mean(random_matches)
+        # 随机基准
+        random_single = self._random_baseline(test_periods, 6, 1)
+        random_duplex = self._random_baseline(test_periods, 7, 3)
         
-        # 找出最佳策略
-        best_strategy = max(strategy_results.items(), 
-                           key=lambda x: x[1]['avg_red_match'])
+        # 找最佳策略
+        best_single = max(single_results.items(), key=lambda x: x[1]['avg_red_match'])
+        best_duplex = max(duplex_results.items(), key=lambda x: x[1]['avg_red_match'])
         
-        # 汇总结果
         return {
             'test_periods': test_periods,
-            'red_count': red_count,
-            'blue_count': blue_count,
-            'random_baseline': {
-                'avg_red_match': round(random_avg, 4),
-                'description': '完全随机选号'
-            },
-            'strategies': strategy_results,
-            'best_strategy': {
-                'name': best_strategy[0],
-                'avg_red_match': best_strategy[1]['avg_red_match'],
-                'improvement': round(best_strategy[1]['avg_red_match'] - random_avg, 4),
-                'improvement_percent': round(
-                    (best_strategy[1]['avg_red_match'] - random_avg) / max(random_avg, 0.001) * 100, 2
+            
+            # 单式结果
+            'single': {
+                'description': '单式 (6红1蓝)',
+                'red_count': 6,
+                'blue_count': 1,
+                'random_baseline': random_single,
+                'strategies': single_results,
+                'best_strategy': {
+                    'name': best_single[0],
+                    'avg_red_match': best_single[1]['avg_red_match'],
+                    'improvement': round(best_single[1]['avg_red_match'] - random_single, 4)
+                },
+                'ranking': sorted(
+                    [(n, d['avg_red_match']) for n, d in single_results.items()],
+                    key=lambda x: x[1], reverse=True
                 )
             },
-            'summary': {
-                name: {
-                    'avg_red': data['avg_red_match'],
-                    'vs_random': round(data['avg_red_match'] - random_avg, 4)
-                }
-                for name, data in strategy_results.items()
-            }
+            
+            # 复式结果
+            'duplex': {
+                'description': '复式 (7红3蓝)',
+                'red_count': 7,
+                'blue_count': 3,
+                'random_baseline': random_duplex,
+                'strategies': duplex_results,
+                'best_strategy': {
+                    'name': best_duplex[0],
+                    'avg_red_match': best_duplex[1]['avg_red_match'],
+                    'improvement': round(best_duplex[1]['avg_red_match'] - random_duplex, 4)
+                },
+                'ranking': sorted(
+                    [(n, d['avg_red_match']) for n, d in duplex_results.items()],
+                    key=lambda x: x[1], reverse=True
+                )
+            },
+            
+            # 向后兼容（使用单式最佳结果）
+            'avg_red_match': best_single[1]['avg_red_match'],
+            'avg_random_match': random_single,
+            'improvement': round(best_single[1]['avg_red_match'] - random_single, 4),
+            'improvement_percent': round(
+                (best_single[1]['avg_red_match'] - random_single) / max(random_single, 0.001) * 100, 2
+            ),
+            'blue_accuracy': best_single[1]['blue_accuracy'],
+            'distribution': best_single[1]['distribution'],
+            'details': best_single[1]['details'],
+            'best_strategy_name': best_single[0],
+            'ranking': [(n, d['avg_red_match']) for n, d in single_results.items()]
         }
     
+    def _random_baseline(self, test_periods: int, red_count: int, blue_count: int) -> float:
+        """计算随机基准"""
+        rng = np.random.default_rng(42)
+        matches = []
+        
+        for _ in range(test_periods * 100):
+            # 随机选号
+            rand_red = set(rng.choice(range(1, 34), red_count, replace=False))
+            
+            # 随机选一期实际结果
+            actual_idx = rng.integers(len(self.history))
+            actual_red = set(self.history[actual_idx]['red'])
+            
+            # 计算命中
+            matches.append(len(rand_red & actual_red))
+        
+        return round(np.mean(matches), 4)
+    
     def run(self, test_periods: int = 50) -> Dict:
-        """
-        默认回测方法 - 保持向后兼容
-        运行所有策略并返回综合结果
-        """
-        results = self.run_all_strategies(test_periods, red_count=6, blue_count=1)
-        
-        # 转换为旧格式以保持兼容
-        best = results['best_strategy']
-        best_data = results['strategies'][best['name']]
-        
-        return {
-            # 最佳策略数据
-            'avg_red_match': best_data['avg_red_match'],
-            'avg_random_match': results['random_baseline']['avg_red_match'],
-            'improvement': best['improvement'],
-            'improvement_percent': best['improvement_percent'],
-            'blue_accuracy': best_data['blue_accuracy'],
-            'distribution': best_data['distribution'],
-            'details': best_data['details'],
-            
-            # 新增：完整策略对比
-            'all_strategies': results['strategies'],
-            'best_strategy_name': best['name'],
-            'random_baseline': results['random_baseline']['avg_red_match'],
-            'test_periods': test_periods,
-            
-            # 策略排名
-            'ranking': sorted(
-                [(name, data['avg_red_match']) for name, data in results['strategies'].items()],
-                key=lambda x: x[1],
-                reverse=True
-            )
-        }
+        """默认回测 - 运行完整对比"""
+        return self.run_comparison(test_periods)
