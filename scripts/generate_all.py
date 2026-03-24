@@ -12,6 +12,7 @@ from lib.models import LotteryPredictor, Backtester
 
 def main():
     print("🚀 开始生成分析和预测数据...")
+    print("=" * 60)
     
     data_dir = Path('docs/data')
     
@@ -26,21 +27,21 @@ def main():
     
     print(f"📊 加载 {len(history)} 条历史记录")
     
-    if len(history) < 10:
-        print("❌ 数据量不足!")
+    if len(history) < 30:
+        print("❌ 数据量不足 (需要至少30期)!")
         return
     
     # 2. 生成分析数据
-    print("📈 生成分析数据...")
+    print("\n📈 生成分析数据...")
     fe = FeatureEngineer(history)
     analysis = fe.build_full_analysis()
     
     with open(data_dir / 'analysis.json', 'w', encoding='utf-8') as f:
         json.dump(analysis, f, ensure_ascii=False, indent=2)
-    print("✅ analysis.json 已生成")
+    print("   ✅ analysis.json")
     
     # 3. 生成预测数据
-    print("🎯 生成预测数据...")
+    print("\n🎯 生成预测数据...")
     predictor = LotteryPredictor(history)
     
     single_predictions = predictor.generate_single_predictions(count=5)
@@ -68,39 +69,45 @@ def main():
     
     with open(data_dir / 'predictions.json', 'w', encoding='utf-8') as f:
         json.dump(pred_output, f, ensure_ascii=False, indent=2)
-    print("✅ predictions.json 已生成")
+    print("   ✅ predictions.json")
     
-    # 4. 运行多策略回测
-    print("📊 运行多策略回测验证...")
+    # 4. 运行回测
+    print("\n📊 运行回测验证...")
     backtester = Backtester(history)
     backtest_results = backtester.run(test_periods=min(100, len(history) - 50))
     
     with open(data_dir / 'backtest.json', 'w', encoding='utf-8') as f:
         json.dump(backtest_results, f, ensure_ascii=False, indent=2)
-    print("✅ backtest.json 已生成")
+    print("   ✅ backtest.json")
     
     # 5. 打印摘要
     print("\n" + "=" * 60)
     print("📋 生成摘要")
     print("=" * 60)
     print(f"最新期号: {history[-1]['period']}")
-    print(f"数据日期: {history[-1]['date']}")
-    print(f"单式方案: {len(single_predictions)} 组")
-    print(f"复式方案: {len(duplex_predictions)} 组")
+    print(f"开奖日期: {history[-1]['date']}")
+    print(f"红球: {history[-1]['red']} 蓝球: {history[-1]['blue']}")
     
-    print("\n📊 策略回测排名:")
+    # 单式回测
+    print("\n📊 单式回测 (6红1蓝):")
     print("-" * 40)
-    for i, (name, score) in enumerate(backtest_results['ranking'], 1):
-        vs_random = score - backtest_results['random_baseline']
-        marker = "👑" if i == 1 else "  "
-        print(f"{marker} {i}. {name}: {score:.3f} (vs随机 {vs_random:+.3f})")
+    single = backtest_results.get('single', {})
+    for i, (name, score) in enumerate(single.get('ranking', [])[:3], 1):
+        vs_random = score - single.get('random_baseline', 1.09)
+        print(f"   {i}. {name}: {score:.3f} (vs随机 {vs_random:+.3f})")
+    print(f"   随机基准: {single.get('random_baseline', 'N/A')}")
     
+    # 复式回测
+    print("\n📊 复式回测 (7红3蓝):")
     print("-" * 40)
-    print(f"随机基准: {backtest_results['random_baseline']:.3f}")
-    print(f"最佳策略: {backtest_results['best_strategy_name']}")
-    print("=" * 60)
+    duplex = backtest_results.get('duplex', {})
+    for i, (name, score) in enumerate(duplex.get('ranking', [])[:3], 1):
+        vs_random = score - duplex.get('random_baseline', 1.27)
+        print(f"   {i}. {name}: {score:.3f} (vs随机 {vs_random:+.3f})")
+    print(f"   随机基准: {duplex.get('random_baseline', 'N/A')}")
     
-    print("\n✅ 所有数据生成完成!")
+    print("\n" + "=" * 60)
+    print("✅ 所有数据生成完成!")
 
 
 if __name__ == "__main__":
