@@ -449,20 +449,20 @@ class LotteryPredictor:
 
 
 class Backtester:
-    """回测器"""
+    """回测器 - 支持多策略对比"""
     
     def __init__(self, history: List[Dict]):
         self.history = history
     
-    def run(self, test_periods: int = 50) -> Dict:
-        """运行回测"""
-        if len(self.history) < test_periods + 50:
-            test_periods = max(10, len(self.history) - 50)
-        
+    def run_single_strategy(self, strategy_name: str, strategy_func, 
+                            test_periods: int = 50, red_count: int = 6, 
+                            blue_count: int = 1) -> Dict:
+        """运行单个策略的回测"""
         results = {
+            'strategy': strategy_name,
             'red_matches': [],
             'blue_matches': [],
-            'distribution': {i: 0 for i in range(7)},
+            'distribution': {i: 0 for i in range(red_count + 1)},
             'details': []
         }
         
@@ -471,17 +471,23 @@ class Backtester:
             actual = self.history[i]
             
             predictor = LotteryPredictor(train_data)
-            pred = predictor.predict_weighted(red_count=6, blue_count=1)
+            pred = strategy_func(predictor, red_count, blue_count)
             
+            # 计算红球命中
             actual_red = set(actual['red'])
-            red_match = len(set(pred['red']) & actual_red)
+            pred_red = set(pred['red'])
+            red_match = len(pred_red & actual_red)
             
-            pred_blue = pred['blue'] if isinstance(pred['blue'], int) else pred['blue'][0]
-            blue_match = 1 if pred_blue == actual['blue'] else 0
+            # 计算蓝球命中
+            pred_blue = pred['blue'] if isinstance(pred['blue'], int) else pred['blue']
+            if isinstance(pred_blue, list):
+                blue_match = 1 if actual['blue'] in pred_blue else 0
+            else:
+                blue_match = 1 if pred_blue == actual['blue'] else 0
             
             results['red_matches'].append(red_match)
             results['blue_matches'].append(blue_match)
-            results['distribution'][red_match] += 1
+            results['distribution'][red_match] = results['distribution'].get(red_match, 0) + 1
             
             results['details'].append({
                 'period': actual['period'],
@@ -493,7 +499,44 @@ class Backtester:
                 'blue_match': blue_match
             })
         
-        # 随机对比
+        return results
+    
+    def run_all_strategies(self, test_periods: int = 50, 
+                           red_count: int = 6, blue_count: int = 1) -> Dict:
+        """运行所有策略的回测对比"""
+        
+        if len(self.history) < test_periods + 50:
+            test_periods = max(10, len(self.history) - 50)
+        
+        # 定义所有策略
+        strategies = {
+            '智能加权': lambda p, r, b: p.predict_weighted(r, b),
+            '三区均衡': lambda p, r, b: p.predict_zone_balanced(r, b),
+            '冷热混合': lambda p, r, b: p.predict_cold_hot_mix(r, b),
+            '遗漏优先': lambda p, r, b: p.predict_missing_focused(r, b),
+            '和值控制': lambda p, r, b: p.predict_sum_controlled(r, b),
+            '连号感知': lambda p, r, b: p.predict_consecutive_aware(r, b),
+        }
+        
+        # 运行各策略
+        strategy_results = {}
+        for name, func in strategies.items():
+            print(f"  回测策略: {name}...")
+            result = self.run_single_strategy(
+                name, func, test_periods, red_count, blue_count
+            )
+            
+            avg_red = np.mean(result['red_matches'])
+            avg_blue = np.mean(result['blue_matches'])
+            
+            strategy_results[name] = {
+                'avg_red_match': round(avg_red, 4),
+                'blue_accuracy': round(avg_blue, 4),
+                'distribution': result['distribution'],
+                'details': result['details'][-5:]  # 保留最近5期详情
+            }
+        
+        # 随机基准对比
         random_matches = []
         rng = np.random.default_rng()
         for _ in range(test_periods * 100):
@@ -502,16 +545,70 @@ class Backtester:
             actual_red = set(self.history[actual_idx]['red'])
             random_matches.append(len(rand_red & actual_red))
         
-        avg_red = np.mean(results['red_matches'])
-        avg_random = np.mean(random_matches)
+        random_avg = np.mean(random_matches)
+        
+        # 找出最佳策略
+        best_strategy = max(strategy_results.items(), 
+                           key=lambda x: x[1]['avg_red_match'])
+        
+        # 汇总结果
+        return {
+            'test_periods': test_periods,
+            'red_count': red_count,
+            'blue_count': blue_count,
+            'random_baseline': {
+                'avg_red_match': round(random_avg, 4),
+                'description': '完全随机选号'
+            },
+            'strategies': strategy_results,
+            'best_strategy': {
+                'name': best_strategy[0],
+                'avg_red_match': best_strategy[1]['avg_red_match'],
+                'improvement': round(best_strategy[1]['avg_red_match'] - random_avg, 4),
+                'improvement_percent': round(
+                    (best_strategy[1]['avg_red_match'] - random_avg) / max(random_avg, 0.001) * 100, 2
+                )
+            },
+            'summary': {
+                name: {
+                    'avg_red': data['avg_red_match'],
+                    'vs_random': round(data['avg_red_match'] - random_avg, 4)
+                }
+                for name, data in strategy_results.items()
+            }
+        }
+    
+    def run(self, test_periods: int = 50) -> Dict:
+        """
+        默认回测方法 - 保持向后兼容
+        运行所有策略并返回综合结果
+        """
+        results = self.run_all_strategies(test_periods, red_count=6, blue_count=1)
+        
+        # 转换为旧格式以保持兼容
+        best = results['best_strategy']
+        best_data = results['strategies'][best['name']]
         
         return {
-            'avg_red_match': round(avg_red, 4),
-            'avg_random_match': round(avg_random, 4),
-            'improvement': round(avg_red - avg_random, 4),
-            'improvement_percent': round((avg_red - avg_random) / max(avg_random, 0.001) * 100, 2),
-            'blue_accuracy': round(np.mean(results['blue_matches']), 4),
-            'distribution': results['distribution'],
+            # 最佳策略数据
+            'avg_red_match': best_data['avg_red_match'],
+            'avg_random_match': results['random_baseline']['avg_red_match'],
+            'improvement': best['improvement'],
+            'improvement_percent': best['improvement_percent'],
+            'blue_accuracy': best_data['blue_accuracy'],
+            'distribution': best_data['distribution'],
+            'details': best_data['details'],
+            
+            # 新增：完整策略对比
+            'all_strategies': results['strategies'],
+            'best_strategy_name': best['name'],
+            'random_baseline': results['random_baseline']['avg_red_match'],
             'test_periods': test_periods,
-            'details': results['details'][-10:]
+            
+            # 策略排名
+            'ranking': sorted(
+                [(name, data['avg_red_match']) for name, data in results['strategies'].items()],
+                key=lambda x: x[1],
+                reverse=True
+            )
         }
