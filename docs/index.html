@@ -225,40 +225,60 @@
         
         <!-- 回测页面 -->
         <div id="page-backtest" class="page hidden">
+            
+            <!-- 回测类型切换 -->
+            <div class="flex gap-2 mb-6">
+                <button id="bt-btn-single" onclick="switchBacktestType('single')"
+                        class="px-4 py-2 rounded-lg font-medium transition bg-blue-500 text-white">
+                    📊 单式回测 (6+1)
+                </button>
+                <button id="bt-btn-duplex" onclick="switchBacktestType('duplex')"
+                        class="px-4 py-2 rounded-lg font-medium transition bg-gray-200 text-slate-600">
+                    📊 复式回测 (7+3)
+                </button>
+            </div>
+            
             <div class="grid lg:grid-cols-3 gap-6">
                 
-                <!-- 左侧：指标和图表 -->
+                <!-- 左侧 -->
                 <div class="lg:col-span-2 space-y-6">
-                    <!-- 顶部指标 -->
+                    
+                    <!-- 指标卡片 -->
                     <div class="card p-5">
-                        <h3 class="font-bold text-slate-700 mb-4">📈 回测总览</h3>
+                        <h3 class="font-bold text-slate-700 mb-4">
+                            📈 <span id="bt-title">单式回测</span> 总览
+                        </h3>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div class="bg-blue-50 rounded-xl p-4 text-center">
                                 <div class="text-xs text-slate-500 mb-1">最佳策略命中</div>
                                 <div id="bt-strategy" class="text-2xl font-bold text-blue-600">-</div>
+                                <div id="bt-strategy-name" class="text-xs text-blue-400 mt-1">-</div>
                             </div>
                             <div class="bg-slate-100 rounded-xl p-4 text-center">
                                 <div class="text-xs text-slate-500 mb-1">随机基准</div>
                                 <div id="bt-random" class="text-2xl font-bold text-slate-500">-</div>
+                                <div class="text-xs text-slate-400 mt-1">完全随机</div>
                             </div>
                             <div class="bg-green-50 rounded-xl p-4 text-center">
                                 <div class="text-xs text-slate-500 mb-1">提升幅度</div>
                                 <div id="bt-improve" class="text-2xl font-bold text-green-600">-</div>
+                                <div class="text-xs text-green-400 mt-1">vs随机</div>
                             </div>
                             <div class="bg-purple-50 rounded-xl p-4 text-center">
                                 <div class="text-xs text-slate-500 mb-1">蓝球命中率</div>
                                 <div id="bt-blue" class="text-2xl font-bold text-purple-600">-</div>
+                                <div id="bt-blue-note" class="text-xs text-purple-400 mt-1">1/16 ≈ 6.25%</div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- 命中分布图 -->
+                    <!-- 图表 -->
                     <div class="card p-5">
                         <h4 class="font-medium text-slate-600 mb-3">命中数分布</h4>
                         <canvas id="backtestChart" height="150"></canvas>
                     </div>
                     
-                    <!-- 预测详情 -->
+                    <!-- 详情 -->
                     <div class="card p-5">
                         <h4 class="font-medium text-slate-600 mb-3">最近预测详情</h4>
                         <div id="backtest-details" class="space-y-2 text-sm">
@@ -267,37 +287,58 @@
                     </div>
                 </div>
                 
-                <!-- 右侧：策略排名 -->
+                <!-- 右侧 -->
                 <div class="space-y-4">
+                    
+                    <!-- 策略排名 -->
                     <div class="card p-5">
                         <h3 class="font-bold text-slate-700 mb-4">🏆 策略排名</h3>
-                        <div class="text-xs text-slate-400 mb-3">
-                            基于近期历史数据回测，对比随机选号
-                        </div>
                         <div id="strategy-ranking" class="space-y-1">
                             <p class="text-slate-400 text-sm loading">加载中...</p>
                         </div>
                         
-                        <div class="mt-4 pt-4 border-t border-slate-100">
-                            <div class="flex justify-between text-xs text-slate-500">
+                        <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500 space-y-1">
+                            <div class="flex justify-between">
                                 <span>📊 回测期数</span>
                                 <span id="bt-periods">-</span>
                             </div>
-                            <div class="flex justify-between text-xs text-slate-500 mt-1">
-                                <span>🎲 理论随机命中</span>
-                                <span>≈ 1.09</span>
+                            <div class="flex justify-between">
+                                <span>🎯 选号数量</span>
+                                <span id="bt-ball-count">6红1蓝</span>
                             </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 理论说明 -->
+                    <div class="card p-4 bg-blue-50 border border-blue-200">
+                        <h4 class="font-medium text-blue-800 mb-2">📐 理论命中率</h4>
+                        <div class="text-xs text-blue-700 space-y-2">
+                            <div class="flex justify-between">
+                                <span>单式 (6红):</span>
+                                <span class="font-mono">≈ 1.09 个</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>复式 (7红):</span>
+                                <span class="font-mono">≈ 1.27 个</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>复式 (8红):</span>
+                                <span class="font-mono">≈ 1.45 个</span>
+                            </div>
+                            <p class="pt-2 border-t border-blue-200 mt-2">
+                                计算公式: (红球数 × 6) / 33
+                            </p>
                         </div>
                     </div>
                     
                     <!-- 说明 -->
                     <div class="card p-4 bg-amber-50 border border-amber-200">
-                        <h4 class="font-medium text-amber-800 mb-2">⚠️ 回测说明</h4>
+                        <h4 class="font-medium text-amber-800 mb-2">⚠️ 说明</h4>
                         <ul class="text-xs text-amber-700 space-y-1">
-                            <li>• 回测使用历史数据验证策略效果</li>
-                            <li>• 每个策略使用"之前"的数据预测"下一期"</li>
-                            <li>• 随机选号理论平均命中约 1.09 个红球</li>
-                            <li>• 过去表现不代表未来结果</li>
+                            <li>• 回测 = 用历史数据模拟预测</li>
+                            <li>• 每期用"之前"数据预测"当期"</li>
+                            <li>• 高于随机基准说明策略有效</li>
+                            <li>• 历史表现≠未来结果</li>
                         </ul>
                     </div>
                 </div>
