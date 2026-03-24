@@ -43,10 +43,7 @@ def main():
     print("🎯 生成预测数据...")
     predictor = LotteryPredictor(history)
     
-    # 单式预测 (6红1蓝)
     single_predictions = predictor.generate_single_predictions(count=5)
-    
-    # 复式预测 (7红3蓝)
     duplex_predictions = predictor.generate_duplex_predictions(count=3)
     
     pred_output = {
@@ -66,7 +63,6 @@ def main():
             'blue_count': 3,
             'predictions': duplex_predictions
         },
-        # 保持向后兼容
         'predictions': single_predictions
     }
     
@@ -74,8 +70,8 @@ def main():
         json.dump(pred_output, f, ensure_ascii=False, indent=2)
     print("✅ predictions.json 已生成")
     
-    # 4. 运行回测
-    print("📊 运行回测验证...")
+    # 4. 运行多策略回测
+    print("📊 运行多策略回测验证...")
     backtester = Backtester(history)
     backtest_results = backtester.run(test_periods=min(100, len(history) - 50))
     
@@ -84,14 +80,25 @@ def main():
     print("✅ backtest.json 已生成")
     
     # 5. 打印摘要
-    print("\n" + "=" * 50)
-    print("📋 生成摘要:")
-    print(f"   最新期号: {history[-1]['period']}")
-    print(f"   数据日期: {history[-1]['date']}")
-    print(f"   单式方案: {len(single_predictions)} 组 (6红1蓝)")
-    print(f"   复式方案: {len(duplex_predictions)} 组 (7红3蓝)")
-    print(f"   回测命中: {backtest_results['avg_red_match']:.2f}")
-    print("=" * 50)
+    print("\n" + "=" * 60)
+    print("📋 生成摘要")
+    print("=" * 60)
+    print(f"最新期号: {history[-1]['period']}")
+    print(f"数据日期: {history[-1]['date']}")
+    print(f"单式方案: {len(single_predictions)} 组")
+    print(f"复式方案: {len(duplex_predictions)} 组")
+    
+    print("\n📊 策略回测排名:")
+    print("-" * 40)
+    for i, (name, score) in enumerate(backtest_results['ranking'], 1):
+        vs_random = score - backtest_results['random_baseline']
+        marker = "👑" if i == 1 else "  "
+        print(f"{marker} {i}. {name}: {score:.3f} (vs随机 {vs_random:+.3f})")
+    
+    print("-" * 40)
+    print(f"随机基准: {backtest_results['random_baseline']:.3f}")
+    print(f"最佳策略: {backtest_results['best_strategy_name']}")
+    print("=" * 60)
     
     print("\n✅ 所有数据生成完成!")
 
