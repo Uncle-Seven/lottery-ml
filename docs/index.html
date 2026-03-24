@@ -223,37 +223,82 @@
             </div>
         </div>
         
-        <!-- ==================== 回测页面 ==================== -->
+        <!-- 回测页面 -->
         <div id="page-backtest" class="page hidden">
-            <div class="card p-5">
-                <h3 class="font-bold text-slate-700 mb-4">📈 策略回测验证</h3>
+            <div class="grid lg:grid-cols-3 gap-6">
                 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-blue-50 rounded-xl p-4 text-center">
-                        <div class="text-xs text-slate-500 mb-1">策略平均命中</div>
-                        <div id="bt-strategy" class="text-2xl font-bold text-blue-600">-</div>
+                <!-- 左侧：指标和图表 -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- 顶部指标 -->
+                    <div class="card p-5">
+                        <h3 class="font-bold text-slate-700 mb-4">📈 回测总览</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="bg-blue-50 rounded-xl p-4 text-center">
+                                <div class="text-xs text-slate-500 mb-1">最佳策略命中</div>
+                                <div id="bt-strategy" class="text-2xl font-bold text-blue-600">-</div>
+                            </div>
+                            <div class="bg-slate-100 rounded-xl p-4 text-center">
+                                <div class="text-xs text-slate-500 mb-1">随机基准</div>
+                                <div id="bt-random" class="text-2xl font-bold text-slate-500">-</div>
+                            </div>
+                            <div class="bg-green-50 rounded-xl p-4 text-center">
+                                <div class="text-xs text-slate-500 mb-1">提升幅度</div>
+                                <div id="bt-improve" class="text-2xl font-bold text-green-600">-</div>
+                            </div>
+                            <div class="bg-purple-50 rounded-xl p-4 text-center">
+                                <div class="text-xs text-slate-500 mb-1">蓝球命中率</div>
+                                <div id="bt-blue" class="text-2xl font-bold text-purple-600">-</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-slate-100 rounded-xl p-4 text-center">
-                        <div class="text-xs text-slate-500 mb-1">随机平均命中</div>
-                        <div id="bt-random" class="text-2xl font-bold text-slate-600">-</div>
+                    
+                    <!-- 命中分布图 -->
+                    <div class="card p-5">
+                        <h4 class="font-medium text-slate-600 mb-3">命中数分布</h4>
+                        <canvas id="backtestChart" height="150"></canvas>
                     </div>
-                    <div class="bg-green-50 rounded-xl p-4 text-center">
-                        <div class="text-xs text-slate-500 mb-1">提升幅度</div>
-                        <div id="bt-improve" class="text-2xl font-bold text-green-600">-</div>
-                    </div>
-                    <div class="bg-purple-50 rounded-xl p-4 text-center">
-                        <div class="text-xs text-slate-500 mb-1">蓝球命中率</div>
-                        <div id="bt-blue" class="text-2xl font-bold text-purple-600">-</div>
+                    
+                    <!-- 预测详情 -->
+                    <div class="card p-5">
+                        <h4 class="font-medium text-slate-600 mb-3">最近预测详情</h4>
+                        <div id="backtest-details" class="space-y-2 text-sm">
+                            <div class="text-slate-400">加载中...</div>
+                        </div>
                     </div>
                 </div>
                 
-                <h4 class="font-medium text-slate-600 mb-3">红球命中数分布</h4>
-                <canvas id="backtestChart" height="150"></canvas>
-                
-                <div class="mt-6">
-                    <h4 class="font-medium text-slate-600 mb-3">最近预测详情</h4>
-                    <div id="backtest-details" class="space-y-2 text-sm">
-                        <div class="text-slate-400">加载中...</div>
+                <!-- 右侧：策略排名 -->
+                <div class="space-y-4">
+                    <div class="card p-5">
+                        <h3 class="font-bold text-slate-700 mb-4">🏆 策略排名</h3>
+                        <div class="text-xs text-slate-400 mb-3">
+                            基于近期历史数据回测，对比随机选号
+                        </div>
+                        <div id="strategy-ranking" class="space-y-1">
+                            <p class="text-slate-400 text-sm loading">加载中...</p>
+                        </div>
+                        
+                        <div class="mt-4 pt-4 border-t border-slate-100">
+                            <div class="flex justify-between text-xs text-slate-500">
+                                <span>📊 回测期数</span>
+                                <span id="bt-periods">-</span>
+                            </div>
+                            <div class="flex justify-between text-xs text-slate-500 mt-1">
+                                <span>🎲 理论随机命中</span>
+                                <span>≈ 1.09</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 说明 -->
+                    <div class="card p-4 bg-amber-50 border border-amber-200">
+                        <h4 class="font-medium text-amber-800 mb-2">⚠️ 回测说明</h4>
+                        <ul class="text-xs text-amber-700 space-y-1">
+                            <li>• 回测使用历史数据验证策略效果</li>
+                            <li>• 每个策略使用"之前"的数据预测"下一期"</li>
+                            <li>• 随机选号理论平均命中约 1.09 个红球</li>
+                            <li>• 过去表现不代表未来结果</li>
+                        </ul>
                     </div>
                 </div>
             </div>
