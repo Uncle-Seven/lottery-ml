@@ -39,6 +39,13 @@ jobs:
           # 验证 JSON 格式
           python -c "import json; json.load(open('docs/data/history.json'))" || echo "[]" > docs/data/history.json
       
+      - name: 🔍 Debug
+        run: |
+          echo "DATA_URL is set: ${{ secrets.DATA_URL != '' }}"
+          echo "URL length: ${#DATA_URL}"
+        env:
+          DATA_URL: ${{ secrets.DATA_URL }}
+      
       - name: 🕷️ Fetch latest data
         run: python scripts/fetch_data.py
         env:
@@ -86,3 +93,4 @@ jobs:
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        
