@@ -1,3 +1,5 @@
+// docs/js/app.js
+
 // ==================== 全局变量 ====================
 let historyData = [];
 let analysisData = {};
@@ -5,6 +7,7 @@ let predictionsData = {};
 let backtestData = {};
 let historyDisplayCount = 20;
 let charts = {};
+let currentPredictionType = 'single';  // 'single' 或 'duplex'
 
 // ==================== 初始化 ====================
 document.addEventListener('DOMContentLoaded', async () => {
@@ -28,7 +31,6 @@ async function loadAllData() {
         
     } catch (error) {
         console.error('加载数据失败:', error);
-        showError('数据加载失败，请刷新重试');
     }
 }
 
@@ -36,11 +38,6 @@ async function fetchJSON(url) {
     const response = await fetch(url + '?t=' + Date.now());
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.json();
-}
-
-function showError(message) {
-    // 简单的错误提示
-    alert(message);
 }
 
 // ==================== UI 初始化 ====================
@@ -53,7 +50,6 @@ function initializeUI() {
 }
 
 function updateHeader() {
-    // 更新时间
     const updateTime = predictionsData.generated_at || analysisData.updated_at;
     if (updateTime) {
         document.getElementById('lastUpdate').textContent = 
@@ -62,8 +58,6 @@ function updateHeader() {
             });
         document.getElementById('lastUpdate').classList.remove('loading');
     }
-    
-    // 总期数
     document.getElementById('totalRecords').textContent = historyData.length || '-';
 }
 
@@ -81,74 +75,108 @@ function renderLatestDraw() {
     document.getElementById('latestNumbers').innerHTML = numbersHtml;
 }
 
-// ==================== 标签切换 ====================
-function showTab(tabName) {
-    // 隐藏所有页面
-    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+// ==================== 预测类型切换 ====================
+function switchPredictionType(type) {
+    currentPredictionType = type;
     
-    // 移除所有标签激活状态
-    document.querySelectorAll('.tab-btn').forEach(t => {
-        t.classList.remove('active');
-        t.classList.add('text-slate-500');
-    });
+    // 更新按钮样式
+    document.getElementById('btn-single').classList.toggle('bg-blue-500', type === 'single');
+    document.getElementById('btn-single').classList.toggle('text-white', type === 'single');
+    document.getElementById('btn-single').classList.toggle('bg-gray-200', type !== 'single');
     
-    // 显示目标页面
-    const page = document.getElementById(`page-${tabName}`);
-    page.classList.remove('hidden');
-    page.classList.add('fade-in');
+    document.getElementById('btn-duplex').classList.toggle('bg-blue-500', type === 'duplex');
+    document.getElementById('btn-duplex').classList.toggle('text-white', type === 'duplex');
+    document.getElementById('btn-duplex').classList.toggle('bg-gray-200', type !== 'duplex');
     
-    // 激活标签
-    const tab = document.getElementById(`tab-${tabName}`);
-    tab.classList.add('active');
-    tab.classList.remove('text-slate-500');
-    
-    // 特定页面的渲染
-    if (tabName === 'analysis') {
-        setTimeout(renderCharts, 100);
-    } else if (tabName === 'history') {
-        renderHistory();
-    } else if (tabName === 'backtest') {
-        renderBacktest();
-    }
+    renderPredictions();
 }
 
 // ==================== 预测渲染 ====================
 function renderPredictions() {
     const container = document.getElementById('predictions');
     
-    if (!predictionsData.predictions?.length) {
+    // 获取对应类型的预测数据
+    let predictions, description;
+    
+    if (currentPredictionType === 'duplex' && predictionsData.duplex) {
+        predictions = predictionsData.duplex.predictions;
+        description = predictionsData.duplex.description;
+    } else if (predictionsData.single) {
+        predictions = predictionsData.single.predictions;
+        description = predictionsData.single.description;
+    } else {
+        predictions = predictionsData.predictions;
+        description = '单式投注 (6红1蓝)';
+    }
+    
+    if (!predictions?.length) {
         container.innerHTML = '<div class="text-center py-6 text-slate-400">暂无预测数据</div>';
         return;
     }
     
-    // 更新基于信息
+    // 更新标题信息
     document.getElementById('predBasedOn').textContent = 
-        `基于: 第${predictionsData.based_on_period}期 (${predictionsData.based_on_date})`;
+        `${description} | 基于第${predictionsData.based_on_period}期`;
     
-    container.innerHTML = predictionsData.predictions.map(pred => `
+    container.innerHTML = predictions.map(pred => {
+        const blue = pred.blue;
+        const isMultiBlue = Array.isArray(blue);
+        
+        return `
         <div class="border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:bg-blue-50/30 transition">
             <div class="flex flex-wrap justify-between items-start gap-2 mb-3">
                 <div>
                     <span class="font-bold text-slate-700">方案 ${pred.id}</span>
                     <span class="ml-2 text-xs px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full">${pred.strategy}</span>
+                    ${isMultiBlue ? `<span class="ml-1 text-xs px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full">复式</span>` : ''}
                 </div>
-                <div class="text-xs text-slate-400 flex gap-3">
+                <div class="text-xs text-slate-400 flex gap-3 flex-wrap">
                     <span>和值: ${pred.sum}</span>
                     <span>跨度: ${pred.span}</span>
-                    <span>奇偶: ${pred.odd_count}:${6-pred.odd_count}</span>
+                    <span>奇偶: ${pred.odd_count}:${pred.red.length - pred.odd_count}</span>
                     <span>区间: ${pred.zone_dist}</span>
                 </div>
             </div>
             <div class="flex flex-wrap items-center gap-1">
                 ${pred.red.map(n => `<span class="ball ball-red">${pad(n)}</span>`).join('')}
                 <span class="mx-2 text-slate-300">|</span>
-                <span class="ball ball-blue">${pad(pred.blue)}</span>
+                ${isMultiBlue 
+                    ? blue.map(n => `<span class="ball ball-blue">${pad(n)}</span>`).join('')
+                    : `<span class="ball ball-blue">${pad(blue)}</span>`
+                }
             </div>
+            ${pred.red_count > 6 || (isMultiBlue && blue.length > 1) ? `
+            <div class="mt-2 text-xs text-slate-400">
+                📝 ${pred.red_count}红${isMultiBlue ? blue.length : 1}蓝 
+                | 注数: ${calculateBets(pred.red_count, isMultiBlue ? blue.length : 1)}注
+                | 金额: ${calculateBets(pred.red_count, isMultiBlue ? blue.length : 1) * 2}元
+            </div>
+            ` : ''}
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
-// ==================== 统计渲染 ====================
+// 计算复式注数
+function calculateBets(redCount, blueCount) {
+    const redBets = combination(redCount, 6);
+    return redBets * blueCount;
+}
+
+// 组合数 C(n, k)
+function combination(n, k) {
+    if (k > n) return 0;
+    if (k === 0 || k === n) return 1;
+    
+    let result = 1;
+    for (let i = 0; i < k; i++) {
+        result = result * (n - i) / (i + 1);
+    }
+    return Math.round(result);
+}
+
+// ==================== 其他渲染函数 ====================
+
 function renderStatistics() {
     const stats = analysisData.statistics;
     if (!stats) return;
@@ -164,7 +192,6 @@ function renderStatistics() {
 }
 
 function renderHotColdNumbers() {
-    // 热号
     const freq = analysisData.frequency_50?.red;
     if (freq) {
         const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
@@ -175,7 +202,6 @@ function renderHotColdNumbers() {
             `).join('');
     }
     
-    // 冷号 (基于遗漏)
     const missing = analysisData.missing?.red;
     if (missing) {
         const sorted = Object.entries(missing).sort((a, b) => b[1] - a[1]);
@@ -186,7 +212,6 @@ function renderHotColdNumbers() {
             `).join('');
     }
     
-    // 上升趋势
     const rising = analysisData.trends?.rising;
     if (rising) {
         document.getElementById('rising-numbers').innerHTML = 
@@ -199,15 +224,38 @@ function renderHotColdNumbers() {
     }
 }
 
-// ==================== 图表渲染 ====================
+// ==================== 标签切换 ====================
+function showTab(tabName) {
+    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(t => {
+        t.classList.remove('active');
+        t.classList.add('text-slate-500');
+    });
+    
+    const page = document.getElementById(`page-${tabName}`);
+    page.classList.remove('hidden');
+    page.classList.add('fade-in');
+    
+    const tab = document.getElementById(`tab-${tabName}`);
+    tab.classList.add('active');
+    tab.classList.remove('text-slate-500');
+    
+    if (tabName === 'analysis') {
+        setTimeout(renderCharts, 100);
+    } else if (tabName === 'history') {
+        renderHistory();
+    } else if (tabName === 'backtest') {
+        renderBacktest();
+    }
+}
+
+// ==================== 图表 ====================
 function renderCharts() {
     Object.values(charts).forEach(c => c?.destroy());
     
-    // 红球频率
     const redFreq = analysisData.frequency_50?.red;
     if (redFreq) {
-        const ctx = document.getElementById('redFreqChart');
-        charts.red = new Chart(ctx, {
+        charts.red = new Chart(document.getElementById('redFreqChart'), {
             type: 'bar',
             data: {
                 labels: Object.keys(redFreq),
@@ -224,11 +272,9 @@ function renderCharts() {
         });
     }
     
-    // 蓝球频率
     const blueFreq = analysisData.frequency_50?.blue;
     if (blueFreq) {
-        const ctx = document.getElementById('blueFreqChart');
-        charts.blue = new Chart(ctx, {
+        charts.blue = new Chart(document.getElementById('blueFreqChart'), {
             type: 'bar',
             data: {
                 labels: Object.keys(blueFreq),
@@ -242,11 +288,9 @@ function renderCharts() {
         });
     }
     
-    // 遗漏值
     const missing = analysisData.missing?.red;
     if (missing) {
-        const ctx = document.getElementById('missingChart');
-        charts.missing = new Chart(ctx, {
+        charts.missing = new Chart(document.getElementById('missingChart'), {
             type: 'bar',
             data: {
                 labels: Object.keys(missing),
@@ -263,11 +307,9 @@ function renderCharts() {
         });
     }
     
-    // 和值走势
     if (historyData.length >= 10) {
         const recent = historyData.slice(-30);
-        const ctx = document.getElementById('sumTrendChart');
-        charts.sum = new Chart(ctx, {
+        charts.sum = new Chart(document.getElementById('sumTrendChart'), {
             type: 'line',
             data: {
                 labels: recent.map(r => r.period.slice(-3)),
@@ -280,10 +322,7 @@ function renderCharts() {
                     pointRadius: 3
                 }]
             },
-            options: {
-                ...chartOptions('和值'),
-                plugins: { legend: { display: false } }
-            }
+            options: { ...chartOptions('和值'), plugins: { legend: { display: false } } }
         });
     }
 }
@@ -293,12 +332,7 @@ function chartOptions(yLabel) {
         responsive: true,
         maintainAspectRatio: true,
         plugins: { legend: { display: false } },
-        scales: {
-            y: { 
-                beginAtZero: true,
-                title: { display: true, text: yLabel }
-            }
-        }
+        scales: { y: { beginAtZero: true, title: { display: true, text: yLabel } } }
     };
 }
 
@@ -325,9 +359,8 @@ function renderHistory() {
         </div>
     `).join('');
     
-    // 控制加载更多按钮
-    const btn = document.getElementById('load-more-btn');
-    btn.style.display = historyDisplayCount >= historyData.length ? 'none' : 'block';
+    document.getElementById('load-more-btn').style.display = 
+        historyDisplayCount >= historyData.length ? 'none' : 'block';
 }
 
 function loadMoreHistory() {
@@ -339,14 +372,11 @@ function loadMoreHistory() {
 function renderBacktest() {
     if (!backtestData.avg_red_match) {
         document.getElementById('page-backtest').innerHTML = `
-            <div class="card p-8 text-center text-slate-400">
-                <p>暂无回测数据</p>
-            </div>
+            <div class="card p-8 text-center text-slate-400">暂无回测数据</div>
         `;
         return;
     }
     
-    // 更新指标
     document.getElementById('bt-strategy').textContent = backtestData.avg_red_match.toFixed(2);
     document.getElementById('bt-random').textContent = backtestData.avg_random_match.toFixed(2);
     document.getElementById('bt-improve').textContent = 
@@ -354,7 +384,6 @@ function renderBacktest() {
     document.getElementById('bt-blue').textContent = 
         `${(backtestData.blue_accuracy * 100).toFixed(1)}%`;
     
-    // 命中分布图
     if (charts.backtest) charts.backtest.destroy();
     
     const dist = backtestData.distribution || {};
@@ -366,12 +395,8 @@ function renderBacktest() {
                 label: '命中次数',
                 data: [0,1,2,3,4,5,6].map(i => dist[i] || 0),
                 backgroundColor: [
-                    'rgba(239,68,68,0.6)',
-                    'rgba(251,146,60,0.6)',
-                    'rgba(234,179,8,0.6)',
-                    'rgba(34,197,94,0.6)',
-                    'rgba(34,197,94,0.8)',
-                    'rgba(16,185,129,0.8)',
+                    'rgba(239,68,68,0.6)', 'rgba(251,146,60,0.6)', 'rgba(234,179,8,0.6)',
+                    'rgba(34,197,94,0.6)', 'rgba(34,197,94,0.8)', 'rgba(16,185,129,0.8)',
                     'rgba(6,182,212,0.8)'
                 ],
                 borderRadius: 6
@@ -386,7 +411,6 @@ function renderBacktest() {
         }
     });
     
-    // 详情
     const details = backtestData.details || [];
     if (details.length) {
         document.getElementById('backtest-details').innerHTML = details.map(d => `
