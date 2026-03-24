@@ -100,17 +100,31 @@
             </button>
         </nav>
         
-        <!-- ==================== 预测页面 ==================== -->
+        <!-- 预测页面 -->
         <div id="page-predict" class="page fade-in">
             <div class="grid lg:grid-cols-3 gap-6">
                 
                 <!-- 预测列表 -->
                 <div class="lg:col-span-2">
                     <div class="card p-5">
-                        <div class="flex justify-between items-center mb-4">
+                        <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
                             <h2 class="text-lg font-bold text-slate-800">🎯 智能预测方案</h2>
-                            <span id="predBasedOn" class="text-xs text-slate-400">基于: -</span>
+                            
+                            <!-- 切换按钮 -->
+                            <div class="flex gap-2">
+                                <button id="btn-single" onclick="switchPredictionType('single')"
+                                        class="px-4 py-1.5 text-sm rounded-full transition bg-blue-500 text-white">
+                                    单式 6+1
+                                </button>
+                                <button id="btn-duplex" onclick="switchPredictionType('duplex')"
+                                        class="px-4 py-1.5 text-sm rounded-full transition bg-gray-200 text-slate-600">
+                                    复式 7+3
+                                </button>
+                            </div>
                         </div>
+                        
+                        <p id="predBasedOn" class="text-xs text-slate-400 mb-3">基于: -</p>
+                        
                         <div id="predictions" class="space-y-3">
                             <div class="text-center py-8 text-slate-400 loading">加载预测中...</div>
                         </div>
