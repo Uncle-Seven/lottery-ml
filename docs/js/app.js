@@ -368,68 +368,120 @@ function loadMoreHistory() {
     renderHistory();
 }
 
-// ==================== 回测 ====================
-function renderBacktest() {
-    const container = document.getElementById('page-backtest');
+// ==================== 回测相关 ====================
+let currentBacktestType = 'single';
+
+function switchBacktestType(type) {
+    currentBacktestType = type;
     
-    if (!backtestData.avg_red_match) {
-        container.innerHTML = `
+    // 更新按钮样式
+    document.getElementById('bt-btn-single').classList.toggle('bg-blue-500', type === 'single');
+    document.getElementById('bt-btn-single').classList.toggle('text-white', type === 'single');
+    document.getElementById('bt-btn-single').classList.toggle('bg-gray-200', type !== 'single');
+    document.getElementById('bt-btn-single').classList.toggle('text-slate-600', type !== 'single');
+    
+    document.getElementById('bt-btn-duplex').classList.toggle('bg-blue-500', type === 'duplex');
+    document.getElementById('bt-btn-duplex').classList.toggle('text-white', type === 'duplex');
+    document.getElementById('bt-btn-duplex').classList.toggle('bg-gray-200', type !== 'duplex');
+    document.getElementById('bt-btn-duplex').classList.toggle('text-slate-600', type !== 'duplex');
+    
+    renderBacktest();
+}
+
+function renderBacktest() {
+    if (!backtestData || (!backtestData.single && !backtestData.avg_red_match)) {
+        document.getElementById('page-backtest').innerHTML = `
             <div class="card p-8 text-center text-slate-400">暂无回测数据</div>
         `;
         return;
     }
     
-    // 顶部指标
-    document.getElementById('bt-strategy').textContent = backtestData.avg_red_match.toFixed(2);
-    document.getElementById('bt-random').textContent = backtestData.avg_random_match?.toFixed(2) || backtestData.random_baseline?.toFixed(2) || '-';
-    document.getElementById('bt-improve').textContent = 
-        `${backtestData.improvement > 0 ? '+' : ''}${backtestData.improvement_percent?.toFixed(1) || '0'}%`;
-    document.getElementById('bt-blue').textContent = 
-        `${(backtestData.blue_accuracy * 100).toFixed(1)}%`;
+    // 获取对应类型的数据
+    let data, title, ballCount, blueNote;
     
-    // 策略排名
-    renderStrategyRanking();
+    if (currentBacktestType === 'duplex' && backtestData.duplex) {
+        data = backtestData.duplex;
+        title = '复式回测 (7红3蓝)';
+        ballCount = '7红3蓝';
+        blueNote = '3/16 ≈ 18.75%';
+    } else if (backtestData.single) {
+        data = backtestData.single;
+        title = '单式回测 (6红1蓝)';
+        ballCount = '6红1蓝';
+        blueNote = '1/16 ≈ 6.25%';
+    } else {
+        // 兼容旧格式
+        data = {
+            best_strategy: {
+                name: backtestData.best_strategy_name || '智能加权',
+                avg_red_match: backtestData.avg_red_match
+            },
+            random_baseline: backtestData.avg_random_match || backtestData.random_baseline,
+            strategies: backtestData.all_strategies || {},
+            ranking: backtestData.ranking || []
+        };
+        title = '单式回测 (6红1蓝)';
+        ballCount = '6红1蓝';
+        blueNote = '1/16 ≈ 6.25%';
+    }
     
-    // 命中分布图
-    renderBacktestChart();
+    const best = data.best_strategy || {};
+    const randomBaseline = data.random_baseline || 1.09;
+    const improvement = best.avg_red_match - randomBaseline;
+    const improvementPercent = (improvement / randomBaseline * 100).toFixed(1);
     
-    // 预测详情
-    renderBacktestDetails();
+    // 获取蓝球命中率
+    const bestData = data.strategies?.[best.name] || {};
+    const blueAccuracy = bestData.blue_accuracy || backtestData.blue_accuracy || 0;
+    
+    // 更新 UI
+    document.getElementById('bt-title').textContent = title;
+    document.getElementById('bt-strategy').textContent = best.avg_red_match?.toFixed(2) || '-';
+    document.getElementById('bt-strategy-name').textContent = best.name || '-';
+    document.getElementById('bt-random').textContent = randomBaseline.toFixed(2);
+    document.getElementById('bt-improve').textContent = `${improvement > 0 ? '+' : ''}${improvementPercent}%`;
+    document.getElementById('bt-blue').textContent = `${(blueAccuracy * 100).toFixed(1)}%`;
+    document.getElementById('bt-blue-note').textContent = blueNote;
+    document.getElementById('bt-periods').textContent = backtestData.test_periods || '-';
+    document.getElementById('bt-ball-count').textContent = ballCount;
+    
+    // 渲染排名
+    renderStrategyRanking(data.ranking, randomBaseline);
+    
+    // 渲染图表
+    renderBacktestChart(bestData.distribution || backtestData.distribution, best.name);
+    
+    // 渲染详情
+    renderBacktestDetails(bestData.details || backtestData.details);
 }
 
-function renderStrategyRanking() {
+function renderStrategyRanking(ranking, randomBaseline) {
     const container = document.getElementById('strategy-ranking');
-    if (!container) return;
-    
-    const ranking = backtestData.ranking || [];
-    const randomBaseline = backtestData.random_baseline || backtestData.avg_random_match || 1.09;
-    
-    if (!ranking.length) {
-        container.innerHTML = '<p class="text-slate-400 text-sm">暂无数据</p>';
+    if (!container || !ranking?.length) {
+        if (container) container.innerHTML = '<p class="text-slate-400 text-sm">暂无数据</p>';
         return;
     }
     
     container.innerHTML = ranking.map(([name, score], i) => {
         const vsRandom = score - randomBaseline;
         const isFirst = i === 0;
-        const barWidth = Math.min(100, (score / 3) * 100);
+        const maxScore = ranking[0][1];
+        const barWidth = Math.max(20, (score / maxScore) * 100);
         
         return `
-        <div class="flex items-center gap-3 py-2 ${isFirst ? 'bg-yellow-50 -mx-2 px-2 rounded-lg' : ''}">
-            <span class="w-6 text-center font-bold ${isFirst ? 'text-yellow-500' : 'text-slate-400'}">
+        <div class="flex items-center gap-2 py-2 ${isFirst ? 'bg-yellow-50 -mx-2 px-2 rounded-lg' : ''}">
+            <span class="w-5 text-center font-bold text-sm ${isFirst ? 'text-yellow-500' : 'text-slate-400'}">
                 ${isFirst ? '👑' : i + 1}
             </span>
-            <span class="w-20 text-sm font-medium text-slate-700">${name}</span>
-            <div class="flex-1">
-                <div class="h-4 bg-slate-100 rounded-full overflow-hidden">
-                    <div class="h-full rounded-full ${isFirst ? 'bg-yellow-400' : 'bg-blue-400'}" 
-                         style="width: ${barWidth}%"></div>
-                </div>
+            <span class="w-16 text-xs font-medium text-slate-700 truncate">${name}</span>
+            <div class="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full rounded-full transition-all ${isFirst ? 'bg-yellow-400' : 'bg-blue-400'}" 
+                     style="width: ${barWidth}%"></div>
             </div>
-            <span class="w-12 text-right text-sm font-bold ${isFirst ? 'text-yellow-600' : 'text-slate-600'}">
+            <span class="w-10 text-right text-xs font-bold ${isFirst ? 'text-yellow-600' : 'text-slate-600'}">
                 ${score.toFixed(2)}
             </span>
-            <span class="w-16 text-right text-xs ${vsRandom >= 0 ? 'text-green-500' : 'text-red-500'}">
+            <span class="w-12 text-right text-xs ${vsRandom >= 0 ? 'text-green-500' : 'text-red-500'}">
                 ${vsRandom >= 0 ? '+' : ''}${vsRandom.toFixed(2)}
             </span>
         </div>
@@ -437,83 +489,105 @@ function renderStrategyRanking() {
     }).join('');
 }
 
-function renderBacktestChart() {
+function renderBacktestChart(distribution, strategyName) {
     if (charts.backtest) charts.backtest.destroy();
     
-    const dist = backtestData.distribution || {};
     const ctx = document.getElementById('backtestChart');
-    
     if (!ctx) return;
+    
+    // 处理分布数据
+    const dist = distribution || {};
+    const maxKey = Math.max(...Object.keys(dist).map(Number), 6);
+    const labels = Array.from({length: maxKey + 1}, (_, i) => String(i));
+    const values = labels.map(k => dist[k] || 0);
     
     charts.backtest = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['0', '1', '2', '3', '4', '5', '6'],
+            labels: labels,
             datasets: [{
-                label: `${backtestData.best_strategy_name || '最佳策略'} 命中分布`,
-                data: [0,1,2,3,4,5,6].map(i => dist[i] || 0),
-                backgroundColor: [
-                    'rgba(239,68,68,0.6)', 
-                    'rgba(251,146,60,0.6)', 
-                    'rgba(234,179,8,0.6)',
-                    'rgba(34,197,94,0.6)', 
-                    'rgba(34,197,94,0.8)', 
-                    'rgba(16,185,129,0.8)',
-                    'rgba(6,182,212,0.8)'
-                ],
+                label: `${strategyName || '策略'} 命中分布`,
+                data: values,
+                backgroundColor: labels.map((_, i) => {
+                    if (i >= 6) return 'rgba(6,182,212,0.8)';
+                    if (i >= 4) return 'rgba(34,197,94,0.7)';
+                    if (i >= 3) return 'rgba(234,179,8,0.6)';
+                    return 'rgba(239,68,68,0.5)';
+                }),
                 borderRadius: 6
             }]
         },
         options: {
             responsive: true,
             plugins: {
-                legend: { display: true },
+                legend: { display: false },
                 title: {
                     display: true,
-                    text: `最佳策略: ${backtestData.best_strategy_name || '-'}`
+                    text: `最佳策略: ${strategyName || '-'}`
                 }
             },
             scales: {
-                x: { title: { display: true, text: '红球命中数' } },
-                y: { beginAtZero: true, title: { display: true, text: '次数' } }
+                x: { 
+                    title: { display: true, text: '红球命中数' }
+                },
+                y: { 
+                    beginAtZero: true,
+                    title: { display: true, text: '次数' }
+                }
             }
         }
     });
 }
 
-function renderBacktestDetails() {
+function renderBacktestDetails(details) {
     const container = document.getElementById('backtest-details');
     if (!container) return;
     
-    const details = backtestData.details || [];
-    
-    if (!details.length) {
+    if (!details?.length) {
         container.innerHTML = '<p class="text-slate-400 text-sm">暂无详情</p>';
         return;
     }
     
-    container.innerHTML = details.map(d => `
-        <div class="flex flex-wrap items-center gap-2 py-2 px-3 rounded ${d.red_match >= 3 ? 'bg-green-50' : 'bg-slate-50'}">
+    container.innerHTML = details.map(d => {
+        const predBlue = Array.isArray(d.predicted_blue) ? d.predicted_blue : [d.predicted_blue];
+        const blueHit = predBlue.includes(d.actual_blue);
+        
+        return `
+        <div class="flex flex-wrap items-center gap-2 py-2 px-3 rounded 
+                    ${d.red_match >= 4 ? 'bg-green-50' : d.red_match >= 3 ? 'bg-yellow-50' : 'bg-slate-50'}">
             <span class="text-slate-500 text-xs w-16">${d.period}</span>
-            <span class="text-xs text-slate-400">预测:</span>
-            ${d.predicted_red.map(n => {
-                const hit = d.actual_red.includes(n);
-                return `<span class="w-6 h-6 rounded-full text-xs flex items-center justify-center 
-                    ${hit ? 'bg-green-500 text-white' : 'bg-slate-200 text-slate-500'}">${n}</span>`;
-            }).join('')}
-            <span class="mx-1 text-slate-300">|</span>
-            <span class="w-6 h-6 rounded-full text-xs flex items-center justify-center 
-                ${d.blue_match ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-500'}">
-                ${Array.isArray(d.predicted_blue) ? d.predicted_blue[0] : d.predicted_blue}
-            </span>
-            <span class="text-xs ml-auto">
-                命中: <b class="${d.red_match >= 3 ? 'text-green-600' : 'text-slate-600'}">${d.red_match}</b>红
-                ${d.blue_match ? '<span class="text-blue-500">+蓝</span>' : ''}
+            
+            <!-- 红球 -->
+            <div class="flex items-center gap-0.5">
+                ${d.predicted_red.map(n => {
+                    const hit = d.actual_red.includes(n);
+                    return `<span class="w-5 h-5 rounded-full text-xs flex items-center justify-center 
+                        ${hit ? 'bg-green-500 text-white' : 'bg-slate-200 text-slate-400'}">${n}</span>`;
+                }).join('')}
+            </div>
+            
+            <!-- 蓝球 -->
+            <span class="text-slate-300 mx-1">|</span>
+            <div class="flex items-center gap-0.5">
+                ${predBlue.map(n => {
+                    const hit = n === d.actual_blue;
+                    return `<span class="w-5 h-5 rounded-full text-xs flex items-center justify-center 
+                        ${hit ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-400'}">${n}</span>`;
+                }).join('')}
+            </div>
+            
+            <!-- 命中统计 -->
+            <span class="ml-auto text-xs">
+                <span class="${d.red_match >= 3 ? 'text-green-600 font-bold' : 'text-slate-500'}">
+                    ${d.red_match}红
+                </span>
+                ${blueHit ? '<span class="text-blue-500 font-bold">+蓝</span>' : ''}
+                ${d.prize ? `<span class="ml-1 text-amber-500">${d.prize}</span>` : ''}
             </span>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
-
 // ==================== 工具函数 ====================
 function pad(num) {
     return String(num).padStart(2, '0');
