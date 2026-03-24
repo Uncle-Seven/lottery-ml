@@ -1,3 +1,4 @@
+# scripts/generate_all.py
 """
 生成所有数据文件
 """
@@ -41,14 +42,32 @@ def main():
     # 3. 生成预测数据
     print("🎯 生成预测数据...")
     predictor = LotteryPredictor(history)
-    predictions = predictor.generate_predictions(count=8)
+    
+    # 单式预测 (6红1蓝)
+    single_predictions = predictor.generate_single_predictions(count=5)
+    
+    # 复式预测 (7红3蓝)
+    duplex_predictions = predictor.generate_duplex_predictions(count=3)
     
     pred_output = {
         'generated_at': datetime.now().isoformat(),
         'based_on_period': history[-1]['period'],
         'based_on_date': history[-1]['date'],
         'total_history': len(history),
-        'predictions': predictions
+        'single': {
+            'description': '单式投注 (6红1蓝)',
+            'red_count': 6,
+            'blue_count': 1,
+            'predictions': single_predictions
+        },
+        'duplex': {
+            'description': '复式投注 (7红3蓝)',
+            'red_count': 7,
+            'blue_count': 3,
+            'predictions': duplex_predictions
+        },
+        # 保持向后兼容
+        'predictions': single_predictions
     }
     
     with open(data_dir / 'predictions.json', 'w', encoding='utf-8') as f:
@@ -69,9 +88,9 @@ def main():
     print("📋 生成摘要:")
     print(f"   最新期号: {history[-1]['period']}")
     print(f"   数据日期: {history[-1]['date']}")
-    print(f"   预测方案: {len(predictions)} 组")
-    print(f"   回测命中: {backtest_results['avg_red_match']:.2f} (随机: {backtest_results['avg_random_match']:.2f})")
-    print(f"   提升幅度: {backtest_results['improvement_percent']:.1f}%")
+    print(f"   单式方案: {len(single_predictions)} 组 (6红1蓝)")
+    print(f"   复式方案: {len(duplex_predictions)} 组 (7红3蓝)")
+    print(f"   回测命中: {backtest_results['avg_red_match']:.2f}")
     print("=" * 50)
     
     print("\n✅ 所有数据生成完成!")
