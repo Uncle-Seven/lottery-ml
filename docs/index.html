@@ -231,23 +231,25 @@
         <div id="page-backtest" class="page hidden">
             
             <!-- 回测类型切换 -->
-            <div class="flex gap-2 mb-6">
+            <div class="flex gap-2 mb-6 flex-wrap">
                 <button id="bt-btn-single" onclick="switchBacktestType('single')"
                         class="px-4 py-2 rounded-lg font-medium transition bg-blue-500 text-white">
-                    📊 单式回测 (6+1)
+                    📊 单式 (6+1)
                 </button>
                 <button id="bt-btn-duplex" onclick="switchBacktestType('duplex')"
                         class="px-4 py-2 rounded-lg font-medium transition bg-gray-200 text-slate-600">
-                    📊 复式回测 (7+3)
+                    📊 复式 (7+3)
+                </button>
+                <button id="bt-btn-fortune" onclick="switchBacktestType('fortune')"
+                        class="px-4 py-2 rounded-lg font-medium transition bg-gray-200 text-slate-600">
+                    🎰 福运优化
                 </button>
             </div>
             
-            <div class="grid lg:grid-cols-3 gap-6">
-                
+            <!-- 通用回测内容 -->
+            <div id="backtest-common" class="grid lg:grid-cols-3 gap-6">
                 <!-- 左侧 -->
                 <div class="lg:col-span-2 space-y-6">
-                    
-                    <!-- 指标卡片 -->
                     <div class="card p-5">
                         <h3 class="font-bold text-slate-700 mb-4">
                             📈 <span id="bt-title">单式回测</span> 总览
@@ -261,89 +263,151 @@
                             <div class="bg-slate-100 rounded-xl p-4 text-center">
                                 <div class="text-xs text-slate-500 mb-1">随机基准</div>
                                 <div id="bt-random" class="text-2xl font-bold text-slate-500">-</div>
-                                <div class="text-xs text-slate-400 mt-1">完全随机</div>
                             </div>
                             <div class="bg-green-50 rounded-xl p-4 text-center">
                                 <div class="text-xs text-slate-500 mb-1">提升幅度</div>
                                 <div id="bt-improve" class="text-2xl font-bold text-green-600">-</div>
-                                <div class="text-xs text-green-400 mt-1">vs随机</div>
                             </div>
                             <div class="bg-purple-50 rounded-xl p-4 text-center">
                                 <div class="text-xs text-slate-500 mb-1">蓝球命中率</div>
                                 <div id="bt-blue" class="text-2xl font-bold text-purple-600">-</div>
-                                <div id="bt-blue-note" class="text-xs text-purple-400 mt-1">1/16 ≈ 6.25%</div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- 图表 -->
                     <div class="card p-5">
                         <h4 class="font-medium text-slate-600 mb-3">命中数分布</h4>
                         <canvas id="backtestChart" height="150"></canvas>
                     </div>
                     
-                    <!-- 详情 -->
                     <div class="card p-5">
                         <h4 class="font-medium text-slate-600 mb-3">最近预测详情</h4>
-                        <div id="backtest-details" class="space-y-2 text-sm">
-                            <div class="text-slate-400">加载中...</div>
-                        </div>
+                        <div id="backtest-details" class="space-y-2 text-sm"></div>
                     </div>
                 </div>
                 
                 <!-- 右侧 -->
                 <div class="space-y-4">
-                    
-                    <!-- 策略排名 -->
                     <div class="card p-5">
                         <h3 class="font-bold text-slate-700 mb-4">🏆 策略排名</h3>
-                        <div id="strategy-ranking" class="space-y-1">
-                            <p class="text-slate-400 text-sm loading">加载中...</p>
+                        <div id="strategy-ranking" class="space-y-1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 福运优化专项内容 -->
+            <div id="backtest-fortune" class="hidden">
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <!-- 左侧 -->
+                    <div class="lg:col-span-2 space-y-6">
+                        
+                        <!-- 核心指标 -->
+                        <div class="card p-5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+                            <h3 class="font-bold text-amber-800 mb-4">🎰 福运优化回测总览</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="bg-white/80 rounded-xl p-4 text-center">
+                                    <div class="text-xs text-slate-500 mb-1">平均红球命中</div>
+                                    <div id="ft-red-match" class="text-2xl font-bold text-amber-600">-</div>
+                                </div>
+                                <div class="bg-white/80 rounded-xl p-4 text-center">
+                                    <div class="text-xs text-slate-500 mb-1">福运奖触发率</div>
+                                    <div id="ft-trigger-rate" class="text-2xl font-bold text-orange-600">-</div>
+                                </div>
+                                <div class="bg-white/80 rounded-xl p-4 text-center">
+                                    <div class="text-xs text-slate-500 mb-1">盈利期数占比</div>
+                                    <div id="ft-profit-rate" class="text-2xl font-bold text-green-600">-</div>
+                                </div>
+                                <div class="bg-white/80 rounded-xl p-4 text-center">
+                                    <div class="text-xs text-slate-500 mb-1">投资回报率</div>
+                                    <div id="ft-roi" class="text-2xl font-bold text-blue-600">-</div>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500 space-y-1">
-                            <div class="flex justify-between">
-                                <span>📊 回测期数</span>
-                                <span id="bt-periods">-</span>
+                        <!-- 收益分析 -->
+                        <div class="card p-5">
+                            <h4 class="font-medium text-slate-600 mb-4">💰 收益分析</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                                <div class="bg-slate-50 rounded-lg p-3">
+                                    <div class="text-slate-500">总投入成本</div>
+                                    <div id="ft-total-cost" class="text-lg font-bold text-slate-700">-</div>
+                                </div>
+                                <div class="bg-amber-50 rounded-lg p-3">
+                                    <div class="text-slate-500">福运奖收入</div>
+                                    <div id="ft-fortune-income" class="text-lg font-bold text-amber-600">-</div>
+                                </div>
+                                <div class="bg-blue-50 rounded-lg p-3">
+                                    <div class="text-slate-500">常规奖收入</div>
+                                    <div id="ft-regular-income" class="text-lg font-bold text-blue-600">-</div>
+                                </div>
+                                <div class="bg-green-50 rounded-lg p-3 md:col-span-2">
+                                    <div class="text-slate-500">净收益</div>
+                                    <div id="ft-net-profit" class="text-lg font-bold">-</div>
+                                </div>
+                                <div class="bg-purple-50 rounded-lg p-3">
+                                    <div class="text-slate-500">福运奖贡献</div>
+                                    <div id="ft-fortune-contrib" class="text-lg font-bold text-purple-600">-</div>
+                                </div>
                             </div>
-                            <div class="flex justify-between">
-                                <span>🎯 选号数量</span>
-                                <span id="bt-ball-count">6红1蓝</span>
-                            </div>
+                        </div>
+                        
+                        <!-- 命中分布 -->
+                        <div class="card p-5">
+                            <h4 class="font-medium text-slate-600 mb-3">红球命中分布 & 福运奖触发</h4>
+                            <canvas id="fortuneChart" height="150"></canvas>
+                        </div>
+                        
+                        <!-- 详情 -->
+                        <div class="card p-5">
+                            <h4 class="font-medium text-slate-600 mb-3">最近回测详情</h4>
+                            <div id="fortune-details" class="space-y-2 text-sm"></div>
                         </div>
                     </div>
                     
-                    <!-- 理论说明 -->
-                    <div class="card p-4 bg-blue-50 border border-blue-200">
-                        <h4 class="font-medium text-blue-800 mb-2">📐 理论命中率</h4>
-                        <div class="text-xs text-blue-700 space-y-2">
-                            <div class="flex justify-between">
-                                <span>单式 (6红):</span>
-                                <span class="font-mono">≈ 1.09 个</span>
+                    <!-- 右侧说明 -->
+                    <div class="space-y-4">
+                        <div class="card p-5 bg-amber-50 border border-amber-200">
+                            <h4 class="font-bold text-amber-800 mb-3">🎰 福运奖说明</h4>
+                            <div class="text-sm text-amber-700 space-y-2">
+                                <p><strong>激活条件:</strong> 奖池金额 ≥ 15亿元</p>
+                                <p><strong>中奖条件:</strong> 红球中3个 + 蓝球未中 (X=3, Y=0)</p>
+                                <p><strong>奖金:</strong> 每注5元</p>
+                                <div class="mt-3 p-2 bg-white/50 rounded">
+                                    <p class="font-medium">7+3复式收益测算:</p>
+                                    <p>• 成本: 21注 × 2元 = 42元</p>
+                                    <p>• 若触发: 最多可获 4×3×5 = 60元</p>
+                                    <p>• 净盈利: +18元</p>
+                                </div>
                             </div>
-                            <div class="flex justify-between">
-                                <span>复式 (7红):</span>
-                                <span class="font-mono">≈ 1.27 个</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>复式 (8红):</span>
-                                <span class="font-mono">≈ 1.45 个</span>
-                            </div>
-                            <p class="pt-2 border-t border-blue-200 mt-2">
-                                计算公式: (红球数 × 6) / 33
-                            </p>
                         </div>
-                    </div>
-                    
-                    <!-- 说明 -->
-                    <div class="card p-4 bg-amber-50 border border-amber-200">
-                        <h4 class="font-medium text-amber-800 mb-2">⚠️ 说明</h4>
-                        <ul class="text-xs text-amber-700 space-y-1">
-                            <li>• 回测 = 用历史数据模拟预测</li>
-                            <li>• 每期用"之前"数据预测"当期"</li>
-                            <li>• 高于随机基准说明策略有效</li>
-                            <li>• 历史表现≠未来结果</li>
-                        </ul>
+                        
+                        <div class="card p-5">
+                            <h4 class="font-bold text-slate-700 mb-3">📊 回测参数</h4>
+                            <div class="text-sm text-slate-600 space-y-2">
+                                <div class="flex justify-between">
+                                    <span>回测期数</span>
+                                    <span id="ft-periods">-</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>投注方式</span>
+                                    <span>7红3蓝 (21注)</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>每期成本</span>
+                                    <span>42元</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-4 bg-blue-50 border border-blue-200">
+                            <h4 class="font-medium text-blue-800 mb-2">💡 策略特点</h4>
+                            <ul class="text-xs text-blue-700 space-y-1">
+                                <li>• 偏选冷号温号，减少分奖人数</li>
+                                <li>• 多维结构评分，优化组合质量</li>
+                                <li>• 蓝球三分区选择，提高覆盖率</li>
+                                <li>• 反大众偏好，独享奖金概率更高</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
