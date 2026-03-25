@@ -738,14 +738,14 @@ class LotteryPredictor:
 
 
 class Backtester:
-    """回测器"""
+    """回测器 - 支持单式、复式、福运优化"""
     
     def __init__(self, history: List[Dict]):
         self.history = history
     
     def _calculate_match(self, pred_red: List[int], pred_blue,
                          actual_red: List[int], actual_blue: int) -> Dict:
-        """计算命中"""
+        """计算命中情况"""
         actual_red_set = set(actual_red)
         pred_red_set = set(pred_red)
         red_match = len(pred_red_set & actual_red_set)
@@ -757,6 +757,92 @@ class Backtester:
         
         return {'red_match': red_match, 'blue_match': blue_match}
     
+    def _calculate_prize(self, red_match: int, blue_match: int, 
+                         red_count: int = 6, blue_count: int = 1) -> Dict:
+        """
+        计算中奖情况和奖金
+        
+        返回:
+            Dict: {
+                'prize_level': 中奖等级,
+                'prize_amount': 奖金估算,
+                'fortune_eligible': 是否符合福运奖,
+                'fortune_amount': 福运奖金额
+            }
+        """
+        result = {
+            'prize_level': None,
+            'prize_amount': 0,
+            'is_win': False,
+            'fortune_eligible': False,
+            'fortune_amount': 0,
+            'fortune_tickets': 0,
+        }
+        
+        # 复式展开注数
+        from math import comb
+        expand_tickets = comb(red_count, 6) * blue_count
+        
+        # 单式中奖判断 (基于6红1蓝)
+        if red_count == 6:
+            if red_match == 6 and blue_match:
+                result.update({'prize_level': '一等奖', 'prize_amount': 5000000, 'is_win': True})
+            elif red_match == 6:
+                result.update({'prize_level': '二等奖', 'prize_amount': 100000, 'is_win': True})
+            elif red_match == 5 and blue_match:
+                result.update({'prize_level': '三等奖', 'prize_amount': 3000, 'is_win': True})
+            elif red_match == 5 or (red_match == 4 and blue_match):
+                result.update({'prize_level': '四等奖', 'prize_amount': 200, 'is_win': True})
+            elif red_match == 4 or (red_match == 3 and blue_match):
+                result.update({'prize_level': '五等奖', 'prize_amount': 10, 'is_win': True})
+            elif blue_match:
+                result.update({'prize_level': '六等奖', 'prize_amount': 5, 'is_win': True})
+        else:
+            # 复式中奖判断
+            if red_match >= 6:
+                if blue_match:
+                    result.update({'prize_level': '一等奖(含)', 'is_win': True})
+                    # 计算包含的一等奖注数
+                    first_prize_tickets = comb(red_match, 6) * 1
+                    result['prize_amount'] = first_prize_tickets * 5000000
+                else:
+                    result.update({'prize_level': '二等奖(含)', 'is_win': True})
+                    second_prize_tickets = comb(red_match, 6) * (blue_count - 1 if blue_count > 1 else 1)
+                    result['prize_amount'] = second_prize_tickets * 100000
+            elif red_match >= 5:
+                result.update({'prize_level': '三/四等奖(含)', 'is_win': True})
+                result['prize_amount'] = comb(red_match, 5) * comb(red_count - red_match, 1) * 200
+            elif red_match >= 4:
+                result.update({'prize_level': '四/五等奖(含)', 'is_win': True})
+                result['prize_amount'] = comb(red_match, 4) * comb(red_count - red_match, 2) * 10
+            elif red_match >= 3 and blue_match:
+                result.update({'prize_level': '五等奖(含)', 'is_win': True})
+                result['prize_amount'] = comb(red_match, 3) * comb(red_count - red_match, 3) * 10
+            elif blue_match:
+                result.update({'prize_level': '六等奖(含)', 'is_win': True})
+                # 六等奖：蓝球中，红球0-2个
+                sixth_tickets = sum(comb(red_match, i) * comb(red_count - red_match, 6 - i) 
+                                   for i in range(min(red_match + 1, 3)))
+                result['prize_amount'] = sixth_tickets * 5
+        
+        # 福运奖判断 (奖池≥15亿时激活)
+        # X=3,Y=0: 红球恰好中3个，蓝球未中 → 每注5元
+        if red_count >= 6 and blue_count >= 1:
+            # 计算红球恰好中3个的注数
+            if red_match >= 3:
+                # C(red_match, 3) * C(red_count - red_match, 3)
+                fortune_red_combos = comb(red_match, 3) * comb(red_count - red_match, 3)
+                
+                if not blue_match:  # Y=0
+                    fortune_tickets = fortune_red_combos * blue_count
+                    fortune_amount = fortune_tickets * 5
+                    
+                    result['fortune_eligible'] = True
+                    result['fortune_tickets'] = fortune_tickets
+                    result['fortune_amount'] = fortune_amount
+        
+        return result
+    
     def run_single_strategy(self, strategy_name: str, strategy_func,
                             test_periods: int, red_count: int, blue_count: int) -> Dict:
         """运行单个策略回测"""
@@ -767,8 +853,18 @@ class Backtester:
             'red_matches': [],
             'blue_matches': [],
             'distribution': {},
+            'prizes': [],
+            'fortune_stats': {
+                'eligible_count': 0,
+                'total_fortune_amount': 0,
+                'total_cost': 0,
+                'fortune_profit_count': 0,
+            },
             'details': []
         }
+        
+        # 计算每注成本
+        ticket_cost = comb(red_count, 6) * blue_count * 2
         
         for i in range(len(self.history) - test_periods, len(self.history)):
             train_data = self.history[:i]
@@ -780,18 +876,34 @@ class Backtester:
             predictor = LotteryPredictor(train_data)
             pred = strategy_func(predictor, red_count, blue_count)
             
+            # 计算命中
             match_result = self._calculate_match(
                 pred['red'], pred['blue'], actual['red'], actual['blue']
             )
-            
             red_match = match_result['red_match']
             blue_match = match_result['blue_match']
             
+            # 计算奖金
+            prize_result = self._calculate_prize(
+                red_match, blue_match, red_count, 
+                len(pred['blue']) if isinstance(pred['blue'], list) else 1
+            )
+            
             results['red_matches'].append(red_match)
             results['blue_matches'].append(blue_match)
+            results['prizes'].append(prize_result)
             
+            # 分布统计
             key = str(red_match)
             results['distribution'][key] = results['distribution'].get(key, 0) + 1
+            
+            # 福运奖统计
+            results['fortune_stats']['total_cost'] += ticket_cost
+            if prize_result['fortune_eligible']:
+                results['fortune_stats']['eligible_count'] += 1
+                results['fortune_stats']['total_fortune_amount'] += prize_result['fortune_amount']
+                if prize_result['fortune_amount'] >= ticket_cost:
+                    results['fortune_stats']['fortune_profit_count'] += 1
             
             results['details'].append({
                 'period': actual['period'],
@@ -800,33 +912,38 @@ class Backtester:
                 'actual_red': actual['red'],
                 'actual_blue': actual['blue'],
                 'red_match': red_match,
-                'blue_match': blue_match
+                'blue_match': blue_match,
+                'prize': prize_result['prize_level'],
+                'prize_amount': prize_result['prize_amount'],
+                'fortune_eligible': prize_result['fortune_eligible'],
+                'fortune_amount': prize_result['fortune_amount'],
             })
         
         return results
     
     def run_comparison(self, test_periods: int = 50) -> Dict:
-        """运行单式 vs 复式 vs 福运优化对比回测"""
+        """运行完整对比回测"""
         if len(self.history) < test_periods + 50:
             test_periods = max(10, len(self.history) - 50)
         
-        # 所有策略（含福运优化）
-        strategies = {
+        # 策略定义
+        base_strategies = {
             '智能加权': lambda p, r, b: p.predict_weighted(r, b),
             '三区均衡': lambda p, r, b: p.predict_zone_balanced(r, b),
             '冷热混合': lambda p, r, b: p.predict_cold_hot_mix(r, b),
             '遗漏优先': lambda p, r, b: p.predict_missing_focused(r, b),
             '和值控制': lambda p, r, b: p.predict_sum_controlled(r, b),
             '连号感知': lambda p, r, b: p.predict_consecutive_aware(r, b),
+        }
+        
+        fortune_strategy = {
             '福运优化': lambda p, r, b: p.predict_fortune_optimized(r, b),
         }
         
-        # 单式回测 (6红1蓝)
+        # ==================== 单式回测 (6红1蓝) ====================
         print("  📊 回测单式 (6红1蓝)...")
         single_results = {}
-        for name, func in strategies.items():
-            if name == '福运优化':
-                continue  # 福运优化不适用于单式
+        for name, func in base_strategies.items():
             result = self.run_single_strategy(name, func, test_periods, 6, 1)
             avg_red = np.mean(result['red_matches']) if result['red_matches'] else 0
             avg_blue = np.mean(result['blue_matches']) if result['blue_matches'] else 0
@@ -837,31 +954,57 @@ class Backtester:
                 'details': result['details'][-5:]
             }
         
-        # 复式回测 (7红3蓝)
+        # ==================== 复式回测 (7红3蓝) ====================
         print("  📊 回测复式 (7红3蓝)...")
         duplex_results = {}
-        for name, func in strategies.items():
+        all_strategies = {**base_strategies, **fortune_strategy}
+        
+        for name, func in all_strategies.items():
             result = self.run_single_strategy(name, func, test_periods, 7, 3)
             avg_red = np.mean(result['red_matches']) if result['red_matches'] else 0
             avg_blue = np.mean(result['blue_matches']) if result['blue_matches'] else 0
+            
+            # 福运奖统计
+            fortune_stats = result['fortune_stats']
+            fortune_rate = fortune_stats['eligible_count'] / max(test_periods, 1)
+            fortune_profit_rate = fortune_stats['fortune_profit_count'] / max(test_periods, 1)
+            
             duplex_results[name] = {
                 'avg_red_match': round(avg_red, 4),
                 'blue_accuracy': round(avg_blue, 4),
                 'distribution': result['distribution'],
-                'details': result['details'][-5:]
+                'details': result['details'][-5:],
+                'fortune_stats': {
+                    'eligible_rate': round(fortune_rate, 4),
+                    'profit_rate': round(fortune_profit_rate, 4),
+                    'total_fortune': fortune_stats['total_fortune_amount'],
+                    'total_cost': fortune_stats['total_cost'],
+                    'net_fortune': fortune_stats['total_fortune_amount'] - fortune_stats['total_cost'],
+                }
             }
         
-        # 随机基准
+        # ==================== 福运优化专项回测 ====================
+        print("  🎰 回测福运优化...")
+        fortune_result = self.run_single_strategy(
+            '福运优化', 
+            lambda p, r, b: p.predict_fortune_optimized(r, b),
+            test_periods, 7, 3
+        )
+        
+        fortune_detailed = self._analyze_fortune_backtest(fortune_result, test_periods)
+        
+        # ==================== 随机基准 ====================
         random_single = self._random_baseline(test_periods, 6, 1)
         random_duplex = self._random_baseline(test_periods, 7, 3)
         
-        # 找最佳策略
+        # ==================== 找最佳策略 ====================
         best_single = max(single_results.items(), key=lambda x: x[1]['avg_red_match'])
         best_duplex = max(duplex_results.items(), key=lambda x: x[1]['avg_red_match'])
         
         return {
             'test_periods': test_periods,
             
+            # 单式结果
             'single': {
                 'description': '单式 (6红1蓝)',
                 'red_count': 6,
@@ -879,6 +1022,7 @@ class Backtester:
                 )
             },
             
+            # 复式结果
             'duplex': {
                 'description': '复式 (7红3蓝)',
                 'red_count': 7,
@@ -896,6 +1040,9 @@ class Backtester:
                 )
             },
             
+            # 福运优化专项
+            'fortune': fortune_detailed,
+            
             # 向后兼容
             'avg_red_match': best_single[1]['avg_red_match'],
             'avg_random_match': random_single,
@@ -908,6 +1055,81 @@ class Backtester:
             'details': best_single[1]['details'],
             'best_strategy_name': best_single[0],
             'ranking': [(n, d['avg_red_match']) for n, d in single_results.items()]
+        }
+    
+    def _analyze_fortune_backtest(self, result: Dict, test_periods: int) -> Dict:
+        """分析福运优化回测结果"""
+        fortune_stats = result['fortune_stats']
+        details = result['details']
+        
+        # 基础统计
+        avg_red = np.mean(result['red_matches']) if result['red_matches'] else 0
+        avg_blue = np.mean(result['blue_matches']) if result['blue_matches'] else 0
+        
+        # 福运奖触发分析
+        fortune_eligible_count = fortune_stats['eligible_count']
+        fortune_rate = fortune_eligible_count / max(test_periods, 1)
+        
+        # 收益分析
+        total_cost = fortune_stats['total_cost']
+        total_fortune = fortune_stats['total_fortune_amount']
+        total_regular_prize = sum(d['prize_amount'] for d in details)
+        total_income = total_fortune + total_regular_prize
+        net_profit = total_income - total_cost
+        roi = (total_income / max(total_cost, 1) - 1) * 100
+        
+        # 分红球命中数统计福运奖情况
+        fortune_by_red_match = {}
+        for d in details:
+            rm = d['red_match']
+            if rm not in fortune_by_red_match:
+                fortune_by_red_match[rm] = {'count': 0, 'fortune_eligible': 0, 'fortune_amount': 0}
+            fortune_by_red_match[rm]['count'] += 1
+            if d['fortune_eligible']:
+                fortune_by_red_match[rm]['fortune_eligible'] += 1
+                fortune_by_red_match[rm]['fortune_amount'] += d['fortune_amount']
+        
+        # 盈利期数统计
+        profit_periods = sum(1 for d in details 
+                            if d['fortune_amount'] + d['prize_amount'] >= 42)
+        
+        return {
+            'description': '福运优化 (7红3蓝)',
+            'test_periods': test_periods,
+            'ticket_cost': 42,  # 7+3复式 = 21注 × 2元
+            
+            'match_stats': {
+                'avg_red_match': round(avg_red, 4),
+                'blue_accuracy': round(avg_blue, 4),
+                'distribution': result['distribution'],
+            },
+            
+            'fortune_stats': {
+                'eligible_count': fortune_eligible_count,
+                'eligible_rate': round(fortune_rate * 100, 2),
+                'eligible_rate_desc': f'{fortune_eligible_count}/{test_periods} 期触发福运奖',
+            },
+            
+            'profit_stats': {
+                'total_cost': total_cost,
+                'total_fortune': total_fortune,
+                'total_regular_prize': total_regular_prize,
+                'total_income': total_income,
+                'net_profit': net_profit,
+                'roi': round(roi, 2),
+                'profit_periods': profit_periods,
+                'profit_rate': round(profit_periods / max(test_periods, 1) * 100, 2),
+            },
+            
+            'fortune_by_red_match': fortune_by_red_match,
+            
+            'details': details[-10:],
+            
+            'summary': {
+                'conclusion': '盈利' if net_profit > 0 else '亏损',
+                'avg_per_period': round(net_profit / max(test_periods, 1), 2),
+                'fortune_contribution': round(total_fortune / max(total_income, 1) * 100, 2),
+            }
         }
     
     def _random_baseline(self, test_periods: int, red_count: int, blue_count: int) -> float:
