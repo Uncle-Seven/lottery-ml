@@ -80,25 +80,28 @@ function switchPredictionType(type) {
     currentPredictionType = type;
     
     // 更新按钮样式
-    document.getElementById('btn-single').classList.toggle('bg-blue-500', type === 'single');
-    document.getElementById('btn-single').classList.toggle('text-white', type === 'single');
-    document.getElementById('btn-single').classList.toggle('bg-gray-200', type !== 'single');
-    
-    document.getElementById('btn-duplex').classList.toggle('bg-blue-500', type === 'duplex');
-    document.getElementById('btn-duplex').classList.toggle('text-white', type === 'duplex');
-    document.getElementById('btn-duplex').classList.toggle('bg-gray-200', type !== 'duplex');
+    ['single', 'duplex', 'fortune'].forEach(t => {
+        const btn = document.getElementById(`btn-${t}`);
+        if (btn) {
+            btn.classList.toggle('bg-blue-500', type === t);
+            btn.classList.toggle('text-white', type === t);
+            btn.classList.toggle('bg-gray-200', type !== t);
+            btn.classList.toggle('text-slate-600', type !== t);
+        }
+    });
     
     renderPredictions();
 }
 
-// ==================== 预测渲染 ====================
 function renderPredictions() {
     const container = document.getElementById('predictions');
     
-    // 获取对应类型的预测数据
     let predictions, description;
     
-    if (currentPredictionType === 'duplex' && predictionsData.duplex) {
+    if (currentPredictionType === 'fortune' && predictionsData.fortune) {
+        predictions = predictionsData.fortune.predictions;
+        description = predictionsData.fortune.description;
+    } else if (currentPredictionType === 'duplex' && predictionsData.duplex) {
         predictions = predictionsData.duplex.predictions;
         description = predictionsData.duplex.description;
     } else if (predictionsData.single) {
@@ -114,29 +117,34 @@ function renderPredictions() {
         return;
     }
     
-    // 更新标题信息
     document.getElementById('predBasedOn').textContent = 
         `${description} | 基于第${predictionsData.based_on_period}期`;
     
     container.innerHTML = predictions.map(pred => {
         const blue = pred.blue;
         const isMultiBlue = Array.isArray(blue);
+        const meta = pred.meta || {};
+        const isFortune = meta.method === 'fortune_optimized';
         
         return `
-        <div class="border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:bg-blue-50/30 transition">
+        <div class="border ${isFortune ? 'border-amber-200 bg-amber-50/50' : 'border-slate-100'} rounded-xl p-4 hover:shadow-md transition">
             <div class="flex flex-wrap justify-between items-start gap-2 mb-3">
                 <div>
                     <span class="font-bold text-slate-700">方案 ${pred.id}</span>
-                    <span class="ml-2 text-xs px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full">${pred.strategy}</span>
-                    ${isMultiBlue ? `<span class="ml-1 text-xs px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full">复式</span>` : ''}
+                    <span class="ml-2 text-xs px-2 py-0.5 ${isFortune ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'} rounded-full">
+                        ${pred.strategy}
+                    </span>
+                    ${isFortune ? '<span class="ml-1 text-xs">🎰</span>' : ''}
+                    ${isMultiBlue ? '<span class="ml-1 text-xs px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full">复式</span>' : ''}
                 </div>
                 <div class="text-xs text-slate-400 flex gap-3 flex-wrap">
                     <span>和值: ${pred.sum}</span>
                     <span>跨度: ${pred.span}</span>
-                    <span>奇偶: ${pred.odd_count}:${pred.red.length - pred.odd_count}</span>
                     <span>区间: ${pred.zone_dist}</span>
+                    ${meta.combination_score ? `<span class="text-amber-600">评分: ${meta.combination_score}</span>` : ''}
                 </div>
             </div>
+            
             <div class="flex flex-wrap items-center gap-1">
                 ${pred.red.map(n => `<span class="ball ball-red">${pad(n)}</span>`).join('')}
                 <span class="mx-2 text-slate-300">|</span>
@@ -145,11 +153,28 @@ function renderPredictions() {
                     : `<span class="ball ball-blue">${pad(blue)}</span>`
                 }
             </div>
+            
             ${pred.red_count > 6 || (isMultiBlue && blue.length > 1) ? `
             <div class="mt-2 text-xs text-slate-400">
-                📝 ${pred.red_count}红${isMultiBlue ? blue.length : 1}蓝 
-                | 注数: ${calculateBets(pred.red_count, isMultiBlue ? blue.length : 1)}注
-                | 金额: ${calculateBets(pred.red_count, isMultiBlue ? blue.length : 1) * 2}元
+                📝 ${meta.expand_notes || `${pred.red_count}红${isMultiBlue ? blue.length : 1}蓝`}
+            </div>
+            ` : ''}
+            
+            ${isFortune && meta.fortune_prize ? `
+            <div class="mt-2 p-2 bg-amber-100/50 rounded-lg text-xs">
+                <div class="font-medium text-amber-700 mb-1">🎰 福运奖收益测算</div>
+                <div class="text-amber-600">
+                    ${meta.fortune_prize.x3_y0_scenario} 
+                    <span class="ml-2">(成本${meta.fortune_prize.cost})</span>
+                </div>
+            </div>
+            ` : ''}
+            
+            ${isFortune && meta.red_structure ? `
+            <div class="mt-2 text-xs text-slate-500 flex flex-wrap gap-x-4 gap-y-1">
+                <span>冷号: ${meta.red_structure.cold_numbers?.join(',') || '-'}</span>
+                <span>温号: ${meta.red_structure.warm_numbers?.join(',') || '-'}</span>
+                <span>热号: ${meta.red_structure.hot_numbers?.join(',') || '-'}</span>
             </div>
             ` : ''}
         </div>
