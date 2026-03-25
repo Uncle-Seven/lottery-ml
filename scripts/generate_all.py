@@ -44,13 +44,8 @@ def main():
     print("\n🎯 生成预测数据...")
     predictor = LotteryPredictor(history)
     
-    # 单式预测
     single_predictions = predictor.generate_single_predictions(count=5)
-    
-    # 普通复式预测
     duplex_predictions = predictor.generate_duplex_predictions(count=3)
-    
-    # 福运优化预测
     fortune_predictions = predictor.generate_fortune_predictions(count=3)
     
     pred_output = {
@@ -99,41 +94,41 @@ def main():
     print("=" * 60)
     print(f"最新期号: {history[-1]['period']}")
     print(f"开奖日期: {history[-1]['date']}")
-    print(f"红球: {history[-1]['red']} 蓝球: {history[-1]['blue']}")
-    
-    print(f"\n📦 生成方案:")
-    print(f"   单式 (6+1): {len(single_predictions)} 组")
-    print(f"   复式 (7+3): {len(duplex_predictions)} 组")
-    print(f"   福运优化:   {len(fortune_predictions)} 组")
-    
-    # 打印福运优化方案详情
-    if fortune_predictions:
-        print(f"\n🎰 福运优化方案示例:")
-        fp = fortune_predictions[0]
-        meta = fp.get('meta', {})
-        print(f"   红球: {fp['red']}")
-        print(f"   蓝球: {fp['blue']}")
-        print(f"   评分: {meta.get('combination_score', '-')}")
-        print(f"   注数: {meta.get('expand_notes', '-')}")
-        if 'fortune_prize' in meta:
-            print(f"   福运收益: {meta['fortune_prize'].get('x3_y0_scenario', '-')}")
     
     # 单式回测
-    print("\n📊 单式回测排名:")
-    print("-" * 40)
+    print("\n📊 单式回测 (6红1蓝):")
+    print("-" * 45)
     single = backtest_results.get('single', {})
-    for i, (name, score) in enumerate(single.get('ranking', [])[:5], 1):
+    for i, (name, score) in enumerate(single.get('ranking', [])[:3], 1):
         vs_random = score - single.get('random_baseline', 1.09)
         print(f"   {i}. {name}: {score:.3f} (vs随机 {vs_random:+.3f})")
     
     # 复式回测
-    print("\n📊 复式回测排名:")
-    print("-" * 40)
+    print("\n📊 复式回测 (7红3蓝):")
+    print("-" * 45)
     duplex = backtest_results.get('duplex', {})
     for i, (name, score) in enumerate(duplex.get('ranking', [])[:5], 1):
         vs_random = score - duplex.get('random_baseline', 1.27)
-        marker = "🏆" if name == '福运优化' else "  "
+        marker = "🎰" if name == '福运优化' else "  "
         print(f" {marker}{i}. {name}: {score:.3f} (vs随机 {vs_random:+.3f})")
+    
+    # 福运优化专项
+    print("\n🎰 福运优化专项回测:")
+    print("-" * 45)
+    fortune = backtest_results.get('fortune', {})
+    if fortune:
+        fs = fortune.get('fortune_stats', {})
+        ps = fortune.get('profit_stats', {})
+        ms = fortune.get('match_stats', {})
+        
+        print(f"   平均红球命中: {ms.get('avg_red_match', '-')}")
+        print(f"   福运奖触发率: {fs.get('eligible_rate', 0):.1f}% ({fs.get('eligible_rate_desc', '')})")
+        print(f"   总投入成本:   {ps.get('total_cost', 0):,} 元")
+        print(f"   福运奖收入:   {ps.get('total_fortune', 0):,} 元")
+        print(f"   常规奖收入:   {ps.get('total_regular_prize', 0):,} 元")
+        print(f"   净收益:       {ps.get('net_profit', 0):+,} 元")
+        print(f"   ROI:          {ps.get('roi', 0):+.1f}%")
+        print(f"   盈利期数:     {ps.get('profit_periods', 0)}/{fortune.get('test_periods', 0)} ({ps.get('profit_rate', 0):.1f}%)")
     
     print("\n" + "=" * 60)
     print("✅ 所有数据生成完成!")
