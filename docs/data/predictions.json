@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-25T04:21:42.879359",
+  "generated_at": "2026-03-25T15:45:49.440076",
   "based_on_period": "2026032",
   "based_on_date": "2026-03-24",
   "total_history": 3429,
@@ -13,20 +13,20 @@
         "strategy": "智能加权",
         "red": [
           1,
-          2,
+          3,
+          12,
           14,
-          23,
-          26,
-          28
+          22,
+          27
         ],
-        "blue": 12,
+        "blue": 11,
         "red_count": 6,
         "blue_count": 1,
-        "sum": 94,
-        "span": 27,
-        "odd_count": 2,
-        "big_count": 3,
-        "zone_dist": "2:1:3",
+        "sum": 79,
+        "span": 26,
+        "odd_count": 3,
+        "big_count": 2,
+        "zone_dist": "2:3:1",
         "meta": {
           "method": "weighted"
         }
@@ -38,15 +38,15 @@
           3,
           11,
           14,
-          22,
+          19,
           24,
-          27
+          32
         ],
-        "blue": 10,
+        "blue": 14,
         "red_count": 6,
         "blue_count": 1,
-        "sum": 101,
-        "span": 24,
+        "sum": 103,
+        "span": 29,
         "odd_count": 3,
         "big_count": 3,
         "zone_dist": "2:2:2",
@@ -63,21 +63,21 @@
         "id": 3,
         "strategy": "冷热混合",
         "red": [
-          1,
-          3,
-          5,
-          11,
-          12,
-          24
+          2,
+          4,
+          6,
+          13,
+          23,
+          33
         ],
-        "blue": 8,
+        "blue": 3,
         "red_count": 6,
         "blue_count": 1,
-        "sum": 56,
-        "span": 23,
-        "odd_count": 4,
-        "big_count": 1,
-        "zone_dist": "4:1:1",
+        "sum": 81,
+        "span": 31,
+        "odd_count": 3,
+        "big_count": 2,
+        "zone_dist": "3:1:2",
         "meta": {
           "method": "cold_hot_mix",
           "ratio": "3热:2温:1冷"
@@ -87,21 +87,21 @@
         "id": 4,
         "strategy": "遗漏优先",
         "red": [
-          4,
+          5,
           7,
           8,
           15,
-          16,
-          20
+          21,
+          32
         ],
         "blue": 12,
         "red_count": 6,
         "blue_count": 1,
-        "sum": 70,
-        "span": 16,
-        "odd_count": 2,
-        "big_count": 1,
-        "zone_dist": "3:3:0",
+        "sum": 88,
+        "span": 27,
+        "odd_count": 4,
+        "big_count": 2,
+        "zone_dist": "3:2:1",
         "meta": {
           "method": "missing_focused"
         }
@@ -110,24 +110,24 @@
         "id": 5,
         "strategy": "和值控制",
         "red": [
-          8,
+          1,
           9,
-          10,
-          15,
-          29,
-          33
+          14,
+          19,
+          20,
+          23
         ],
-        "blue": 1,
+        "blue": 11,
         "red_count": 6,
         "blue_count": 1,
-        "sum": 104,
-        "span": 25,
+        "sum": 86,
+        "span": 22,
         "odd_count": 4,
-        "big_count": 2,
-        "zone_dist": "3:1:2",
+        "big_count": 3,
+        "zone_dist": "2:3:1",
         "meta": {
           "method": "sum_controlled",
-          "sum": 104,
+          "sum": 86,
           "target_range": [
             76,
             116
@@ -145,26 +145,26 @@
         "id": 1,
         "strategy": "智能加权",
         "red": [
-          1,
           2,
-          10,
+          3,
+          4,
+          13,
           18,
-          23,
-          26,
-          32
+          22,
+          27
         ],
         "blue": [
-          8,
-          9,
-          15
+          1,
+          4,
+          11
         ],
         "red_count": 7,
         "blue_count": 3,
-        "sum": 112,
-        "span": 31,
-        "odd_count": 2,
-        "big_count": 4,
-        "zone_dist": "3:1:3",
+        "sum": 89,
+        "span": 25,
+        "odd_count": 3,
+        "big_count": 3,
+        "zone_dist": "3:3:1",
         "meta": {
           "method": "weighted"
         }
@@ -173,32 +173,32 @@
         "id": 2,
         "strategy": "三区均衡",
         "red": [
+          4,
+          9,
           10,
-          11,
           12,
-          15,
-          25,
-          30,
-          33
+          14,
+          26,
+          30
         ],
         "blue": [
-          5,
-          8,
-          11
+          1,
+          2,
+          12
         ],
         "red_count": 7,
         "blue_count": 3,
-        "sum": 136,
-        "span": 23,
-        "odd_count": 4,
-        "big_count": 3,
-        "zone_dist": "2:2:3",
+        "sum": 105,
+        "span": 26,
+        "odd_count": 1,
+        "big_count": 2,
+        "zone_dist": "3:2:2",
         "meta": {
           "method": "zone_balanced",
           "zone_dist": [
+            3,
             2,
-            2,
-            3
+            2
           ]
         }
       },
@@ -207,25 +207,25 @@
         "strategy": "冷热混合",
         "red": [
           1,
-          2,
-          4,
-          7,
-          8,
-          9,
-          21
+          5,
+          14,
+          15,
+          18,
+          29,
+          32
         ],
         "blue": [
-          3,
           4,
-          15
+          10,
+          11
         ],
         "red_count": 7,
         "blue_count": 3,
-        "sum": 52,
-        "span": 20,
+        "sum": 114,
+        "span": 31,
         "odd_count": 4,
-        "big_count": 1,
-        "zone_dist": "6:1:0",
+        "big_count": 3,
+        "zone_dist": "2:3:2",
         "meta": {
           "method": "cold_hot_mix",
           "ratio": "3热:2温:2冷"
@@ -244,45 +244,109 @@
         "strategy": "福运优化",
         "red": [
           1,
-          10,
-          12,
-          15,
-          24,
+          4,
+          17,
+          20,
           31,
-          32
+          32,
+          33
         ],
         "blue": [
           4,
-          10,
+          9,
           14
         ],
         "red_count": 7,
         "blue_count": 3,
-        "sum": 125,
-        "span": 31,
-        "odd_count": 3,
-        "big_count": 3,
+        "sum": 138,
+        "span": 32,
+        "odd_count": 4,
+        "big_count": 5,
         "zone_dist": "2:2:3",
         "meta": {
           "method": "fortune_optimized",
           "combination_score": "90/100",
+          "search_attempts": 3,
+          "expand_notes": "7+3 复式 → 21注 = 42元",
+          "red_structure": {
+            "sum": 138,
+            "target_sum": 119,
+            "odd_even": "4奇:3偶",
+            "zone_distribution": "2:2:3",
+            "consecutive_pairs": 2,
+            "tail_digit_types": 6,
+            "cold_numbers": [
+              4,
+              20
+            ],
+            "warm_numbers": [
+              1,
+              17,
+              31,
+              32,
+              33
+            ],
+            "hot_numbers": []
+          },
+          "pool_info": {
+            "analysis_window": "最近100期",
+            "cold_pool_size": 6,
+            "warm_pool_size": 22,
+            "hot_pool_size": 5
+          },
+          "fortune_prize": {
+            "activation": "奖池≥15亿自动激活",
+            "x3_y0_scenario": "12注×5元=60元",
+            "cost": "42元",
+            "net_profit": "+18元"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "strategy": "福运优化",
+        "red": [
+          7,
+          8,
+          14,
+          17,
+          19,
+          24,
+          27
+        ],
+        "blue": [
+          3,
+          9,
+          13
+        ],
+        "red_count": 7,
+        "blue_count": 3,
+        "sum": 116,
+        "span": 20,
+        "odd_count": 4,
+        "big_count": 4,
+        "zone_dist": "2:3:2",
+        "meta": {
+          "method": "fortune_optimized",
+          "combination_score": "94/100",
           "search_attempts": 1,
           "expand_notes": "7+3 复式 → 21注 = 42元",
           "red_structure": {
-            "sum": 125,
+            "sum": 116,
             "target_sum": 119,
-            "odd_even": "3奇:4偶",
-            "zone_distribution": "2:2:3",
+            "odd_even": "4奇:3偶",
+            "zone_distribution": "2:3:2",
             "consecutive_pairs": 1,
-            "tail_digit_types": 5,
-            "cold_numbers": [],
+            "tail_digit_types": 4,
+            "cold_numbers": [
+              7,
+              27
+            ],
             "warm_numbers": [
-              1,
-              10,
-              12,
-              15,
-              31,
-              32
+              8,
+              14,
+              17,
+              19
             ],
             "hot_numbers": [
               24
@@ -303,117 +367,54 @@
         }
       },
       {
-        "id": 2,
+        "id": 3,
         "strategy": "福运优化",
         "red": [
-          4,
+          5,
           6,
-          9,
-          19,
-          20,
-          31,
-          32
+          12,
+          15,
+          24,
+          27,
+          33
         ],
         "blue": [
-          3,
-          7,
+          4,
+          8,
           14
         ],
         "red_count": 7,
         "blue_count": 3,
-        "sum": 121,
+        "sum": 122,
         "span": 28,
-        "odd_count": 3,
-        "big_count": 4,
-        "zone_dist": "3:2:2",
+        "odd_count": 4,
+        "big_count": 3,
+        "zone_dist": "2:2:3",
         "meta": {
           "method": "fortune_optimized",
           "combination_score": "96/100",
-          "search_attempts": 2,
-          "expand_notes": "7+3 复式 → 21注 = 42元",
-          "red_structure": {
-            "sum": 121,
-            "target_sum": 119,
-            "odd_even": "3奇:4偶",
-            "zone_distribution": "3:2:2",
-            "consecutive_pairs": 2,
-            "tail_digit_types": 6,
-            "cold_numbers": [
-              4,
-              20
-            ],
-            "warm_numbers": [
-              6,
-              19,
-              31,
-              32
-            ],
-            "hot_numbers": [
-              9
-            ]
-          },
-          "pool_info": {
-            "analysis_window": "最近100期",
-            "cold_pool_size": 6,
-            "warm_pool_size": 22,
-            "hot_pool_size": 5
-          },
-          "fortune_prize": {
-            "activation": "奖池≥15亿自动激活",
-            "x3_y0_scenario": "12注×5元=60元",
-            "cost": "42元",
-            "net_profit": "+18元"
-          }
-        }
-      },
-      {
-        "id": 3,
-        "strategy": "福运优化",
-        "red": [
-          1,
-          4,
-          14,
-          18,
-          19,
-          23,
-          26
-        ],
-        "blue": [
-          1,
-          6,
-          15
-        ],
-        "red_count": 7,
-        "blue_count": 3,
-        "sum": 105,
-        "span": 25,
-        "odd_count": 3,
-        "big_count": 4,
-        "zone_dist": "2:3:2",
-        "meta": {
-          "method": "fortune_optimized",
-          "combination_score": "100/100",
           "search_attempts": 1,
           "expand_notes": "7+3 复式 → 21注 = 42元",
           "red_structure": {
-            "sum": 105,
+            "sum": 122,
             "target_sum": 119,
-            "odd_even": "3奇:4偶",
-            "zone_distribution": "2:3:2",
+            "odd_even": "4奇:3偶",
+            "zone_distribution": "2:2:3",
             "consecutive_pairs": 1,
             "tail_digit_types": 6,
             "cold_numbers": [
-              4
+              27
             ],
             "warm_numbers": [
-              1,
-              14,
-              18,
-              19,
-              23,
-              26
+              5,
+              6,
+              12,
+              15,
+              33
             ],
-            "hot_numbers": []
+            "hot_numbers": [
+              24
+            ]
           },
           "pool_info": {
             "analysis_window": "最近100期",
@@ -437,20 +438,20 @@
       "strategy": "智能加权",
       "red": [
         1,
-        2,
+        3,
+        12,
         14,
-        23,
-        26,
-        28
+        22,
+        27
       ],
-      "blue": 12,
+      "blue": 11,
       "red_count": 6,
       "blue_count": 1,
-      "sum": 94,
-      "span": 27,
-      "odd_count": 2,
-      "big_count": 3,
-      "zone_dist": "2:1:3",
+      "sum": 79,
+      "span": 26,
+      "odd_count": 3,
+      "big_count": 2,
+      "zone_dist": "2:3:1",
       "meta": {
         "method": "weighted"
       }
@@ -462,15 +463,15 @@
         3,
         11,
         14,
-        22,
+        19,
         24,
-        27
+        32
       ],
-      "blue": 10,
+      "blue": 14,
       "red_count": 6,
       "blue_count": 1,
-      "sum": 101,
-      "span": 24,
+      "sum": 103,
+      "span": 29,
       "odd_count": 3,
       "big_count": 3,
       "zone_dist": "2:2:2",
@@ -487,21 +488,21 @@
       "id": 3,
       "strategy": "冷热混合",
       "red": [
-        1,
-        3,
-        5,
-        11,
-        12,
-        24
+        2,
+        4,
+        6,
+        13,
+        23,
+        33
       ],
-      "blue": 8,
+      "blue": 3,
       "red_count": 6,
       "blue_count": 1,
-      "sum": 56,
-      "span": 23,
-      "odd_count": 4,
-      "big_count": 1,
-      "zone_dist": "4:1:1",
+      "sum": 81,
+      "span": 31,
+      "odd_count": 3,
+      "big_count": 2,
+      "zone_dist": "3:1:2",
       "meta": {
         "method": "cold_hot_mix",
         "ratio": "3热:2温:1冷"
@@ -511,21 +512,21 @@
       "id": 4,
       "strategy": "遗漏优先",
       "red": [
-        4,
+        5,
         7,
         8,
         15,
-        16,
-        20
+        21,
+        32
       ],
       "blue": 12,
       "red_count": 6,
       "blue_count": 1,
-      "sum": 70,
-      "span": 16,
-      "odd_count": 2,
-      "big_count": 1,
-      "zone_dist": "3:3:0",
+      "sum": 88,
+      "span": 27,
+      "odd_count": 4,
+      "big_count": 2,
+      "zone_dist": "3:2:1",
       "meta": {
         "method": "missing_focused"
       }
@@ -534,24 +535,24 @@
       "id": 5,
       "strategy": "和值控制",
       "red": [
-        8,
+        1,
         9,
-        10,
-        15,
-        29,
-        33
+        14,
+        19,
+        20,
+        23
       ],
-      "blue": 1,
+      "blue": 11,
       "red_count": 6,
       "blue_count": 1,
-      "sum": 104,
-      "span": 25,
+      "sum": 86,
+      "span": 22,
       "odd_count": 4,
-      "big_count": 2,
-      "zone_dist": "3:1:2",
+      "big_count": 3,
+      "zone_dist": "2:3:1",
       "meta": {
         "method": "sum_controlled",
-        "sum": 104,
+        "sum": 86,
         "target_range": [
           76,
           116
