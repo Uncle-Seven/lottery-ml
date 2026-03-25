@@ -400,54 +400,46 @@ function switchBacktestType(type) {
     currentBacktestType = type;
     
     // 更新按钮样式
-    document.getElementById('bt-btn-single').classList.toggle('bg-blue-500', type === 'single');
-    document.getElementById('bt-btn-single').classList.toggle('text-white', type === 'single');
-    document.getElementById('bt-btn-single').classList.toggle('bg-gray-200', type !== 'single');
-    document.getElementById('bt-btn-single').classList.toggle('text-slate-600', type !== 'single');
+    ['single', 'duplex', 'fortune'].forEach(t => {
+        const btn = document.getElementById(`bt-btn-${t}`);
+        if (btn) {
+            btn.classList.toggle('bg-blue-500', type === t);
+            btn.classList.toggle('text-white', type === t);
+            btn.classList.toggle('bg-gray-200', type !== t);
+            btn.classList.toggle('text-slate-600', type !== t);
+        }
+    });
     
-    document.getElementById('bt-btn-duplex').classList.toggle('bg-blue-500', type === 'duplex');
-    document.getElementById('bt-btn-duplex').classList.toggle('text-white', type === 'duplex');
-    document.getElementById('bt-btn-duplex').classList.toggle('bg-gray-200', type !== 'duplex');
-    document.getElementById('bt-btn-duplex').classList.toggle('text-slate-600', type !== 'duplex');
+    // 切换显示内容
+    const commonEl = document.getElementById('backtest-common');
+    const fortuneEl = document.getElementById('backtest-fortune');
     
-    renderBacktest();
+    if (type === 'fortune') {
+        commonEl?.classList.add('hidden');
+        fortuneEl?.classList.remove('hidden');
+        renderFortuneBacktest();
+    } else {
+        commonEl?.classList.remove('hidden');
+        fortuneEl?.classList.add('hidden');
+        renderBacktest();
+    }
 }
 
 function renderBacktest() {
-    if (!backtestData || (!backtestData.single && !backtestData.avg_red_match)) {
-        document.getElementById('page-backtest').innerHTML = `
-            <div class="card p-8 text-center text-slate-400">暂无回测数据</div>
-        `;
-        return;
-    }
+    if (!backtestData) return;
     
-    // 获取对应类型的数据
-    let data, title, ballCount, blueNote;
+    let data, title, ballCount;
     
     if (currentBacktestType === 'duplex' && backtestData.duplex) {
         data = backtestData.duplex;
         title = '复式回测 (7红3蓝)';
         ballCount = '7红3蓝';
-        blueNote = '3/16 ≈ 18.75%';
     } else if (backtestData.single) {
         data = backtestData.single;
         title = '单式回测 (6红1蓝)';
         ballCount = '6红1蓝';
-        blueNote = '1/16 ≈ 6.25%';
     } else {
-        // 兼容旧格式
-        data = {
-            best_strategy: {
-                name: backtestData.best_strategy_name || '智能加权',
-                avg_red_match: backtestData.avg_red_match
-            },
-            random_baseline: backtestData.avg_random_match || backtestData.random_baseline,
-            strategies: backtestData.all_strategies || {},
-            ranking: backtestData.ranking || []
-        };
-        title = '单式回测 (6红1蓝)';
-        ballCount = '6红1蓝';
-        blueNote = '1/16 ≈ 6.25%';
+        return;
     }
     
     const best = data.best_strategy || {};
@@ -455,30 +447,167 @@ function renderBacktest() {
     const improvement = best.avg_red_match - randomBaseline;
     const improvementPercent = (improvement / randomBaseline * 100).toFixed(1);
     
-    // 获取蓝球命中率
     const bestData = data.strategies?.[best.name] || {};
-    const blueAccuracy = bestData.blue_accuracy || backtestData.blue_accuracy || 0;
+    const blueAccuracy = bestData.blue_accuracy || 0;
     
-    // 更新 UI
+    // 更新UI
     document.getElementById('bt-title').textContent = title;
     document.getElementById('bt-strategy').textContent = best.avg_red_match?.toFixed(2) || '-';
     document.getElementById('bt-strategy-name').textContent = best.name || '-';
     document.getElementById('bt-random').textContent = randomBaseline.toFixed(2);
     document.getElementById('bt-improve').textContent = `${improvement > 0 ? '+' : ''}${improvementPercent}%`;
     document.getElementById('bt-blue').textContent = `${(blueAccuracy * 100).toFixed(1)}%`;
-    document.getElementById('bt-blue-note').textContent = blueNote;
-    document.getElementById('bt-periods').textContent = backtestData.test_periods || '-';
-    document.getElementById('bt-ball-count').textContent = ballCount;
     
-    // 渲染排名
     renderStrategyRanking(data.ranking, randomBaseline);
+    renderBacktestChart(bestData.distribution || {}, best.name);
+    renderBacktestDetails(bestData.details || []);
+}
+
+function renderFortuneBacktest() {
+    const fortune = backtestData?.fortune;
+    if (!fortune) {
+        document.getElementById('backtest-fortune').innerHTML = 
+            '<div class="card p-8 text-center text-slate-400">暂无福运优化回测数据</div>';
+        return;
+    }
+    
+    const ms = fortune.match_stats || {};
+    const fs = fortune.fortune_stats || {};
+    const ps = fortune.profit_stats || {};
+    
+    // 核心指标
+    document.getElementById('ft-red-match').textContent = ms.avg_red_match?.toFixed(2) || '-';
+    document.getElementById('ft-trigger-rate').textContent = `${fs.eligible_rate || 0}%`;
+    document.getElementById('ft-profit-rate').textContent = `${ps.profit_rate || 0}%`;
+    document.getElementById('ft-roi').textContent = `${ps.roi > 0 ? '+' : ''}${ps.roi || 0}%`;
+    
+    // 收益分析
+    document.getElementById('ft-total-cost').textContent = `${(ps.total_cost || 0).toLocaleString()}元`;
+    document.getElementById('ft-fortune-income').textContent = `${(ps.total_fortune || 0).toLocaleString()}元`;
+    document.getElementById('ft-regular-income').textContent = `${(ps.total_regular_prize || 0).toLocaleString()}元`;
+    
+    const netProfit = ps.net_profit || 0;
+    const netProfitEl = document.getElementById('ft-net-profit');
+    netProfitEl.textContent = `${netProfit > 0 ? '+' : ''}${netProfit.toLocaleString()}元`;
+    netProfitEl.className = `text-lg font-bold ${netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`;
+    
+    const fortuneContrib = fortune.summary?.fortune_contribution || 0;
+    document.getElementById('ft-fortune-contrib').textContent = `${fortuneContrib}%`;
+    
+    document.getElementById('ft-periods').textContent = `${fortune.test_periods || 0}期`;
     
     // 渲染图表
-    renderBacktestChart(bestData.distribution || backtestData.distribution, best.name);
+    renderFortuneChart(fortune);
     
     // 渲染详情
-    renderBacktestDetails(bestData.details || backtestData.details);
+    renderFortuneDetails(fortune.details || []);
 }
+
+function renderFortuneChart(fortune) {
+    if (charts.fortune) charts.fortune.destroy();
+    
+    const ctx = document.getElementById('fortuneChart');
+    if (!ctx) return;
+    
+    const dist = fortune.match_stats?.distribution || {};
+    const fortuneByMatch = fortune.fortune_by_red_match || {};
+    
+    const labels = ['0', '1', '2', '3', '4', '5', '6', '7'];
+    const matchCounts = labels.map(k => dist[k] || 0);
+    const fortuneCounts = labels.map(k => fortuneByMatch[parseInt(k)]?.fortune_eligible || 0);
+    
+    charts.fortune = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: '命中期数',
+                    data: matchCounts,
+                    backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                    borderRadius: 4,
+                    order: 2
+                },
+                {
+                    label: '触发福运奖',
+                    data: fortuneCounts,
+                    backgroundColor: 'rgba(245, 158, 11, 0.8)',
+                    borderRadius: 4,
+                    order: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true },
+            },
+            scales: {
+                x: { 
+                    title: { display: true, text: '红球命中数' },
+                    stacked: false
+                },
+                y: { 
+                    beginAtZero: true,
+                    title: { display: true, text: '期数' }
+                }
+            }
+        }
+    });
+}
+
+function renderFortuneDetails(details) {
+    const container = document.getElementById('fortune-details');
+    if (!container) return;
+    
+    if (!details?.length) {
+        container.innerHTML = '<p class="text-slate-400">暂无详情</p>';
+        return;
+    }
+    
+    container.innerHTML = details.map(d => {
+        const predBlue = Array.isArray(d.predicted_blue) ? d.predicted_blue : [d.predicted_blue];
+        const blueHit = predBlue.includes(d.actual_blue);
+        const isFortune = d.fortune_eligible;
+        const hasProfit = (d.fortune_amount + d.prize_amount) >= 42;
+        
+        return `
+        <div class="flex flex-wrap items-center gap-2 py-2 px-3 rounded 
+                    ${isFortune ? 'bg-amber-50 border border-amber-200' : 
+                      hasProfit ? 'bg-green-50' : 'bg-slate-50'}">
+            <span class="text-slate-500 text-xs w-16">${d.period}</span>
+            
+            <div class="flex items-center gap-0.5">
+                ${d.predicted_red.slice(0, 7).map(n => {
+                    const hit = d.actual_red.includes(n);
+                    return `<span class="w-5 h-5 rounded-full text-xs flex items-center justify-center 
+                        ${hit ? 'bg-green-500 text-white' : 'bg-slate-200 text-slate-400'}">${n}</span>`;
+                }).join('')}
+            </div>
+            
+            <span class="text-slate-300 mx-1">|</span>
+            
+            <div class="flex items-center gap-0.5">
+                ${predBlue.map(n => {
+                    const hit = n === d.actual_blue;
+                    return `<span class="w-5 h-5 rounded-full text-xs flex items-center justify-center 
+                        ${hit ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-400'}">${n}</span>`;
+                }).join('')}
+            </div>
+            
+            <span class="ml-auto text-xs flex items-center gap-2">
+                <span class="${d.red_match >= 3 ? 'text-green-600 font-bold' : 'text-slate-500'}">
+                    ${d.red_match}红${blueHit ? '+蓝' : ''}
+                </span>
+                ${isFortune ? `<span class="text-amber-600 font-bold">🎰 +${d.fortune_amount}元</span>` : ''}
+                ${d.prize_amount > 0 ? `<span class="text-blue-500">+${d.prize_amount}元</span>` : ''}
+            </span>
+        </div>
+        `;
+    }).join('');
+}
+
+// 保持原有的 renderStrategyRanking, renderBacktestChart, renderBacktestDetails 函数不变
 
 function renderStrategyRanking(ranking, randomBaseline) {
     const container = document.getElementById('strategy-ranking');
