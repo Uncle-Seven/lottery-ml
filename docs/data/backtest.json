@@ -7,26 +7,27 @@
     "random_baseline": 1.0928,
     "strategies": {
       "智能加权": {
-        "avg_red_match": 1.06,
-        "blue_accuracy": 0.09,
+        "avg_red_match": 1.0,
+        "blue_accuracy": 0.06,
         "distribution": {
-          "1": 46,
-          "0": 26,
-          "2": 24,
-          "3": 4
+          "1": 47,
+          "0": 29,
+          "2": 20,
+          "4": 1,
+          "3": 3
         },
         "details": [
           {
             "period": "2026109",
             "predicted_red": [
-              2,
-              3,
-              6,
-              13,
+              1,
               18,
-              25
+              24,
+              25,
+              30,
+              33
             ],
-            "predicted_blue": 3,
+            "predicted_blue": 9,
             "actual_red": [
               9,
               12,
@@ -36,7 +37,7 @@
               33
             ],
             "actual_blue": 6,
-            "red_match": 0,
+            "red_match": 2,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -46,14 +47,14 @@
           {
             "period": "2026110",
             "predicted_red": [
-              3,
-              8,
-              9,
-              20,
-              24,
+              7,
+              10,
+              11,
+              17,
+              18,
               32
             ],
-            "predicted_blue": 7,
+            "predicted_blue": 15,
             "actual_red": [
               2,
               5,
@@ -73,14 +74,14 @@
           {
             "period": "2026111",
             "predicted_red": [
-              1,
-              10,
-              16,
+              13,
+              14,
+              19,
               25,
               28,
-              33
+              30
             ],
-            "predicted_blue": 15,
+            "predicted_blue": 10,
             "actual_red": [
               6,
               7,
@@ -90,7 +91,7 @@
               32
             ],
             "actual_blue": 5,
-            "red_match": 0,
+            "red_match": 1,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -100,14 +101,14 @@
           {
             "period": "2026112",
             "predicted_red": [
-              4,
-              6,
-              7,
-              13,
-              17,
-              27
+              8,
+              14,
+              21,
+              22,
+              25,
+              28
             ],
-            "predicted_blue": 13,
+            "predicted_blue": 12,
             "actual_red": [
               1,
               4,
@@ -117,7 +118,7 @@
               29
             ],
             "actual_blue": 11,
-            "red_match": 2,
+            "red_match": 0,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -127,14 +128,14 @@
           {
             "period": "2026113",
             "predicted_red": [
-              2,
-              6,
-              8,
               10,
-              20,
-              22
+              15,
+              22,
+              27,
+              32,
+              33
             ],
-            "predicted_blue": 13,
+            "predicted_blue": 14,
             "actual_red": [
               3,
               4,
@@ -144,7 +145,7 @@
               30
             ],
             "actual_blue": 11,
-            "red_match": 1,
+            "red_match": 0,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -154,26 +155,25 @@
         ]
       },
       "三区均衡": {
-        "avg_red_match": 0.99,
-        "blue_accuracy": 0.12,
+        "avg_red_match": 1.02,
+        "blue_accuracy": 0.07,
         "distribution": {
-          "2": 22,
-          "0": 27,
-          "1": 49,
-          "3": 2
+          "2": 26,
+          "0": 24,
+          "1": 50
         },
         "details": [
           {
             "period": "2026109",
             "predicted_red": [
-              2,
+              8,
               11,
-              15,
-              19,
+              16,
+              20,
               28,
-              29
+              30
             ],
-            "predicted_blue": 11,
+            "predicted_blue": 10,
             "actual_red": [
               9,
               12,
@@ -193,14 +193,14 @@
           {
             "period": "2026110",
             "predicted_red": [
-              4,
+              2,
               9,
-              12,
               14,
-              25,
-              33
+              16,
+              27,
+              29
             ],
-            "predicted_blue": 1,
+            "predicted_blue": 16,
             "actual_red": [
               2,
               5,
@@ -210,7 +210,7 @@
               32
             ],
             "actual_blue": 14,
-            "red_match": 0,
+            "red_match": 2,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -220,14 +220,14 @@
           {
             "period": "2026111",
             "predicted_red": [
-              5,
+              3,
               9,
-              17,
+              14,
               19,
-              23,
-              29
+              25,
+              27
             ],
-            "predicted_blue": 7,
+            "predicted_blue": 14,
             "actual_red": [
               6,
               7,
@@ -237,7 +237,7 @@
               32
             ],
             "actual_blue": 5,
-            "red_match": 0,
+            "red_match": 1,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -247,14 +247,14 @@
           {
             "period": "2026112",
             "predicted_red": [
-              1,
               6,
-              16,
-              22,
-              24,
-              27
+              10,
+              12,
+              13,
+              25,
+              28
             ],
-            "predicted_blue": 1,
+            "predicted_blue": 10,
             "actual_red": [
               1,
               4,
@@ -274,14 +274,14 @@
           {
             "period": "2026113",
             "predicted_red": [
-              6,
-              7,
-              16,
+              1,
+              9,
+              15,
               17,
-              24,
-              33
+              29,
+              30
             ],
-            "predicted_blue": 15,
+            "predicted_blue": 3,
             "actual_red": [
               3,
               4,
@@ -291,7 +291,7 @@
               30
             ],
             "actual_blue": 11,
-            "red_match": 1,
+            "red_match": 2,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -301,27 +301,26 @@
         ]
       },
       "冷热混合": {
-        "avg_red_match": 1.24,
-        "blue_accuracy": 0.06,
+        "avg_red_match": 1.13,
+        "blue_accuracy": 0.03,
         "distribution": {
-          "3": 6,
-          "0": 20,
+          "1": 40,
           "2": 29,
-          "1": 44,
-          "4": 1
+          "0": 26,
+          "3": 5
         },
         "details": [
           {
             "period": "2026109",
             "predicted_red": [
-              10,
-              13,
-              18,
-              24,
-              25,
-              30
+              6,
+              8,
+              15,
+              16,
+              23,
+              29
             ],
-            "predicted_blue": 4,
+            "predicted_blue": 10,
             "actual_red": [
               9,
               12,
@@ -341,14 +340,14 @@
           {
             "period": "2026110",
             "predicted_red": [
-              5,
-              14,
-              24,
-              27,
-              32,
-              33
+              1,
+              6,
+              10,
+              18,
+              25,
+              30
             ],
-            "predicted_blue": 2,
+            "predicted_blue": 10,
             "actual_red": [
               2,
               5,
@@ -358,126 +357,6 @@
               32
             ],
             "actual_blue": 14,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026111",
-            "predicted_red": [
-              6,
-              12,
-              14,
-              15,
-              21,
-              27
-            ],
-            "predicted_blue": 13,
-            "actual_red": [
-              6,
-              7,
-              14,
-              22,
-              31,
-              32
-            ],
-            "actual_blue": 5,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026112",
-            "predicted_red": [
-              11,
-              14,
-              16,
-              19,
-              22,
-              32
-            ],
-            "predicted_blue": 2,
-            "actual_red": [
-              1,
-              4,
-              11,
-              12,
-              17,
-              29
-            ],
-            "actual_blue": 11,
-            "red_match": 1,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026113",
-            "predicted_red": [
-              1,
-              5,
-              13,
-              20,
-              28,
-              30
-            ],
-            "predicted_blue": 11,
-            "actual_red": [
-              3,
-              4,
-              20,
-              24,
-              29,
-              30
-            ],
-            "actual_blue": 11,
-            "red_match": 2,
-            "blue_match": 1,
-            "prize": "六等奖",
-            "prize_amount": 5,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          }
-        ]
-      },
-      "遗漏优先": {
-        "avg_red_match": 1.0,
-        "blue_accuracy": 0.03,
-        "distribution": {
-          "1": 38,
-          "0": 33,
-          "2": 25,
-          "3": 4
-        },
-        "details": [
-          {
-            "period": "2026109",
-            "predicted_red": [
-              3,
-              8,
-              16,
-              21,
-              29,
-              32
-            ],
-            "predicted_blue": 13,
-            "actual_red": [
-              9,
-              12,
-              15,
-              26,
-              30,
-              33
-            ],
-            "actual_blue": 6,
             "red_match": 0,
             "blue_match": 0,
             "prize": null,
@@ -486,43 +365,16 @@
             "fortune_amount": 0
           },
           {
-            "period": "2026110",
-            "predicted_red": [
-              8,
-              10,
-              16,
-              25,
-              29,
-              32
-            ],
-            "predicted_blue": 11,
-            "actual_red": [
-              2,
-              5,
-              16,
-              19,
-              26,
-              32
-            ],
-            "actual_blue": 14,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
             "period": "2026111",
             "predicted_red": [
-              7,
-              8,
-              23,
-              27,
-              29,
-              31
+              1,
+              5,
+              11,
+              13,
+              19,
+              32
             ],
-            "predicted_blue": 10,
+            "predicted_blue": 9,
             "actual_red": [
               6,
               7,
@@ -532,7 +384,7 @@
               32
             ],
             "actual_blue": 5,
-            "red_match": 2,
+            "red_match": 1,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -542,14 +394,161 @@
           {
             "period": "2026112",
             "predicted_red": [
+              4,
+              12,
+              14,
+              15,
+              16,
+              27
+            ],
+            "predicted_blue": 15,
+            "actual_red": [
+              1,
+              4,
+              11,
+              12,
+              17,
+              29
+            ],
+            "actual_blue": 11,
+            "red_match": 2,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026113",
+            "predicted_red": [
+              13,
+              15,
+              24,
+              25,
+              26,
+              27
+            ],
+            "predicted_blue": 1,
+            "actual_red": [
               3,
               4,
+              20,
+              24,
+              29,
+              30
+            ],
+            "actual_blue": 11,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          }
+        ]
+      },
+      "遗漏优先": {
+        "avg_red_match": 1.04,
+        "blue_accuracy": 0.06,
+        "distribution": {
+          "1": 50,
+          "0": 26,
+          "3": 6,
+          "2": 18
+        },
+        "details": [
+          {
+            "period": "2026109",
+            "predicted_red": [
+              3,
+              8,
               10,
+              18,
+              23,
+              26
+            ],
+            "predicted_blue": 10,
+            "actual_red": [
+              9,
+              12,
+              15,
+              26,
+              30,
+              33
+            ],
+            "actual_blue": 6,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026110",
+            "predicted_red": [
+              3,
+              7,
+              23,
+              25,
+              29,
+              32
+            ],
+            "predicted_blue": 13,
+            "actual_red": [
+              2,
+              5,
+              16,
+              19,
+              26,
+              32
+            ],
+            "actual_blue": 14,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026111",
+            "predicted_red": [
+              3,
+              7,
+              18,
               23,
               25,
               29
             ],
-            "predicted_blue": 10,
+            "predicted_blue": 11,
+            "actual_red": [
+              6,
+              7,
+              14,
+              22,
+              31,
+              32
+            ],
+            "actual_blue": 5,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026112",
+            "predicted_red": [
+              1,
+              4,
+              10,
+              23,
+              25,
+              27
+            ],
+            "predicted_blue": 1,
             "actual_red": [
               1,
               4,
@@ -570,10 +569,10 @@
             "period": "2026113",
             "predicted_red": [
               3,
-              10,
               13,
               18,
-              21,
+              23,
+              24,
               27
             ],
             "predicted_blue": 7,
@@ -586,7 +585,7 @@
               30
             ],
             "actual_blue": 11,
-            "red_match": 1,
+            "red_match": 2,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -596,27 +595,26 @@
         ]
       },
       "和值控制": {
-        "avg_red_match": 0.98,
-        "blue_accuracy": 0.08,
+        "avg_red_match": 0.93,
+        "blue_accuracy": 0.05,
         "distribution": {
-          "1": 47,
-          "2": 22,
-          "4": 1,
-          "0": 29,
-          "3": 1
+          "0": 32,
+          "3": 4,
+          "2": 17,
+          "1": 47
         },
         "details": [
           {
             "period": "2026109",
             "predicted_red": [
-              4,
-              16,
-              17,
-              24,
-              26,
-              31
+              2,
+              6,
+              15,
+              19,
+              22,
+              23
             ],
-            "predicted_blue": 10,
+            "predicted_blue": 15,
             "actual_red": [
               9,
               12,
@@ -637,13 +635,13 @@
             "period": "2026110",
             "predicted_red": [
               1,
-              10,
-              14,
+              13,
+              16,
+              21,
               23,
-              27,
-              32
+              27
             ],
-            "predicted_blue": 10,
+            "predicted_blue": 5,
             "actual_red": [
               2,
               5,
@@ -663,14 +661,14 @@
           {
             "period": "2026111",
             "predicted_red": [
-              3,
-              12,
-              15,
+              1,
+              4,
+              11,
+              18,
               22,
-              26,
               32
             ],
-            "predicted_blue": 8,
+            "predicted_blue": 7,
             "actual_red": [
               6,
               7,
@@ -691,13 +689,13 @@
             "period": "2026112",
             "predicted_red": [
               4,
-              6,
-              14,
-              22,
-              23,
-              25
+              12,
+              13,
+              15,
+              21,
+              33
             ],
-            "predicted_blue": 10,
+            "predicted_blue": 4,
             "actual_red": [
               1,
               4,
@@ -707,7 +705,7 @@
               29
             ],
             "actual_blue": 11,
-            "red_match": 1,
+            "red_match": 2,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -717,14 +715,14 @@
           {
             "period": "2026113",
             "predicted_red": [
-              11,
-              12,
-              13,
-              15,
-              25,
-              33
+              1,
+              6,
+              8,
+              21,
+              29,
+              32
             ],
-            "predicted_blue": 14,
+            "predicted_blue": 9,
             "actual_red": [
               3,
               4,
@@ -734,7 +732,7 @@
               30
             ],
             "actual_blue": 11,
-            "red_match": 0,
+            "red_match": 1,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -744,27 +742,26 @@
         ]
       },
       "连号感知": {
-        "avg_red_match": 1.23,
-        "blue_accuracy": 0.07,
+        "avg_red_match": 1.21,
+        "blue_accuracy": 0.08,
         "distribution": {
-          "1": 34,
-          "4": 1,
-          "3": 9,
-          "0": 27,
-          "2": 29
+          "1": 41,
+          "2": 28,
+          "0": 23,
+          "3": 8
         },
         "details": [
           {
             "period": "2026109",
             "predicted_red": [
-              6,
-              14,
-              16,
-              19,
-              24,
-              31
+              12,
+              18,
+              22,
+              25,
+              26,
+              28
             ],
-            "predicted_blue": 14,
+            "predicted_blue": 12,
             "actual_red": [
               9,
               12,
@@ -774,7 +771,7 @@
               33
             ],
             "actual_blue": 6,
-            "red_match": 0,
+            "red_match": 2,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -784,14 +781,14 @@
           {
             "period": "2026110",
             "predicted_red": [
-              6,
-              8,
-              9,
-              14,
-              19,
-              23
+              4,
+              20,
+              25,
+              27,
+              30,
+              33
             ],
-            "predicted_blue": 11,
+            "predicted_blue": 5,
             "actual_red": [
               2,
               5,
@@ -801,7 +798,7 @@
               32
             ],
             "actual_blue": 14,
-            "red_match": 1,
+            "red_match": 0,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -811,14 +808,14 @@
           {
             "period": "2026111",
             "predicted_red": [
-              8,
+              3,
+              5,
               9,
-              13,
-              17,
-              19,
-              26
+              20,
+              28,
+              32
             ],
-            "predicted_blue": 1,
+            "predicted_blue": 2,
             "actual_red": [
               6,
               7,
@@ -828,7 +825,7 @@
               32
             ],
             "actual_blue": 5,
-            "red_match": 0,
+            "red_match": 1,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -838,14 +835,14 @@
           {
             "period": "2026112",
             "predicted_red": [
-              5,
+              1,
               6,
-              9,
-              23,
-              24,
-              32
+              7,
+              10,
+              21,
+              31
             ],
-            "predicted_blue": 15,
+            "predicted_blue": 1,
             "actual_red": [
               1,
               4,
@@ -855,7 +852,7 @@
               29
             ],
             "actual_blue": 11,
-            "red_match": 0,
+            "red_match": 1,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -865,14 +862,14 @@
           {
             "period": "2026113",
             "predicted_red": [
-              2,
-              3,
-              4,
-              9,
-              13,
-              28
+              1,
+              6,
+              12,
+              14,
+              15,
+              23
             ],
-            "predicted_blue": 16,
+            "predicted_blue": 7,
             "actual_red": [
               3,
               4,
@@ -882,7 +879,7 @@
               30
             ],
             "actual_blue": 11,
-            "red_match": 2,
+            "red_match": 0,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -893,34 +890,34 @@
       }
     },
     "best_strategy": {
-      "name": "冷热混合",
-      "avg_red_match": 1.24,
-      "improvement": 0.1472
+      "name": "连号感知",
+      "avg_red_match": 1.21,
+      "improvement": 0.1172
     },
     "ranking": [
       [
-        "冷热混合",
-        1.24
-      ],
-      [
         "连号感知",
-        1.23
+        1.21
       ],
       [
-        "智能加权",
-        1.06
+        "冷热混合",
+        1.13
       ],
       [
         "遗漏优先",
-        1.0
+        1.04
       ],
       [
         "三区均衡",
-        0.99
+        1.02
+      ],
+      [
+        "智能加权",
+        1.0
       ],
       [
         "和值控制",
-        0.98
+        0.93
       ]
     ]
   },
@@ -931,31 +928,30 @@
     "random_baseline": 1.2812,
     "strategies": {
       "智能加权": {
-        "avg_red_match": 1.3,
-        "blue_accuracy": 0.22,
+        "avg_red_match": 1.2,
+        "blue_accuracy": 0.2,
         "distribution": {
-          "2": 25,
-          "1": 40,
-          "3": 12,
-          "0": 22,
-          "4": 1
+          "1": 45,
+          "0": 20,
+          "2": 30,
+          "3": 5
         },
         "details": [
           {
             "period": "2026109",
             "predicted_red": [
-              1,
-              2,
-              4,
-              16,
-              18,
-              24,
-              32
+              11,
+              13,
+              20,
+              21,
+              23,
+              28,
+              29
             ],
             "predicted_blue": [
-              2,
-              12,
-              15
+              3,
+              13,
+              14
             ],
             "actual_red": [
               9,
@@ -977,17 +973,17 @@
             "period": "2026110",
             "predicted_red": [
               1,
-              13,
-              25,
+              5,
+              20,
+              21,
               26,
-              27,
-              30,
+              28,
               32
             ],
             "predicted_blue": [
-              3,
-              5,
-              9
+              7,
+              9,
+              11
             ],
             "actual_red": [
               2,
@@ -998,28 +994,28 @@
               32
             ],
             "actual_blue": 14,
-            "red_match": 2,
+            "red_match": 3,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
+            "fortune_eligible": true,
+            "fortune_amount": 60
           },
           {
             "period": "2026111",
             "predicted_red": [
-              1,
-              8,
-              12,
-              13,
-              19,
-              24,
-              30
+              7,
+              10,
+              14,
+              16,
+              17,
+              22,
+              23
             ],
             "predicted_blue": [
-              5,
-              8,
-              14
+              2,
+              4,
+              13
             ],
             "actual_red": [
               6,
@@ -1030,26 +1026,26 @@
               32
             ],
             "actual_blue": 5,
-            "red_match": 0,
-            "blue_match": 1,
-            "prize": "六等奖(含)",
-            "prize_amount": 35,
-            "fortune_eligible": false,
-            "fortune_amount": 0
+            "red_match": 3,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": true,
+            "fortune_amount": 60
           },
           {
             "period": "2026112",
             "predicted_red": [
-              5,
+              2,
+              11,
               14,
-              17,
-              21,
               22,
               27,
-              30
+              28,
+              32
             ],
             "predicted_blue": [
-              7,
+              2,
               10,
               13
             ],
@@ -1072,18 +1068,557 @@
           {
             "period": "2026113",
             "predicted_red": [
-              3,
-              4,
+              16,
+              19,
+              21,
+              27,
+              29,
+              31,
+              33
+            ],
+            "predicted_blue": [
               6,
               12,
-              18,
+              13
+            ],
+            "actual_red": [
+              3,
+              4,
+              20,
+              24,
+              29,
+              30
+            ],
+            "actual_blue": 11,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          }
+        ],
+        "fortune_stats": {
+          "eligible_rate": 0.03,
+          "profit_rate": 0.03,
+          "total_fortune": 180,
+          "total_cost": 4200,
+          "net_fortune": -4020
+        }
+      },
+      "三区均衡": {
+        "avg_red_match": 1.26,
+        "blue_accuracy": 0.22,
+        "distribution": {
+          "0": 18,
+          "2": 33,
+          "1": 44,
+          "3": 4,
+          "4": 1
+        },
+        "details": [
+          {
+            "period": "2026109",
+            "predicted_red": [
+              1,
+              11,
+              19,
+              22,
               26,
+              28,
+              33
+            ],
+            "predicted_blue": [
+              3,
+              11,
+              13
+            ],
+            "actual_red": [
+              9,
+              12,
+              15,
+              26,
+              30,
+              33
+            ],
+            "actual_blue": 6,
+            "red_match": 2,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026110",
+            "predicted_red": [
+              4,
+              5,
+              17,
+              20,
+              27,
+              28,
+              30
+            ],
+            "predicted_blue": [
+              3,
+              6,
+              16
+            ],
+            "actual_red": [
+              2,
+              5,
+              16,
+              19,
+              26,
+              32
+            ],
+            "actual_blue": 14,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026111",
+            "predicted_red": [
+              4,
+              7,
+              8,
+              18,
+              19,
+              27,
+              28
+            ],
+            "predicted_blue": [
+              1,
+              3,
+              4
+            ],
+            "actual_red": [
+              6,
+              7,
+              14,
+              22,
+              31,
+              32
+            ],
+            "actual_blue": 5,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026112",
+            "predicted_red": [
+              1,
+              2,
+              4,
+              13,
+              21,
+              23,
+              30
+            ],
+            "predicted_blue": [
+              4,
+              6,
+              10
+            ],
+            "actual_red": [
+              1,
+              4,
+              11,
+              12,
+              17,
+              29
+            ],
+            "actual_blue": 11,
+            "red_match": 2,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026113",
+            "predicted_red": [
+              1,
+              6,
+              15,
+              19,
+              24,
+              31,
+              33
+            ],
+            "predicted_blue": [
+              6,
+              8,
+              15
+            ],
+            "actual_red": [
+              3,
+              4,
+              20,
+              24,
+              29,
+              30
+            ],
+            "actual_blue": 11,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          }
+        ],
+        "fortune_stats": {
+          "eligible_rate": 0.03,
+          "profit_rate": 0.03,
+          "total_fortune": 180,
+          "total_cost": 4200,
+          "net_fortune": -4020
+        }
+      },
+      "冷热混合": {
+        "avg_red_match": 1.22,
+        "blue_accuracy": 0.21,
+        "distribution": {
+          "2": 32,
+          "3": 7,
+          "0": 24,
+          "1": 37
+        },
+        "details": [
+          {
+            "period": "2026109",
+            "predicted_red": [
+              1,
+              6,
+              10,
+              12,
+              14,
+              25,
+              32
+            ],
+            "predicted_blue": [
+              2,
+              10,
+              16
+            ],
+            "actual_red": [
+              9,
+              12,
+              15,
+              26,
+              30,
+              33
+            ],
+            "actual_blue": 6,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026110",
+            "predicted_red": [
+              8,
+              10,
+              14,
+              18,
+              20,
+              24,
+              30
+            ],
+            "predicted_blue": [
+              1,
+              3,
+              7
+            ],
+            "actual_red": [
+              2,
+              5,
+              16,
+              19,
+              26,
+              32
+            ],
+            "actual_blue": 14,
+            "red_match": 0,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026111",
+            "predicted_red": [
+              4,
+              9,
+              10,
+              12,
+              13,
+              23,
+              30
+            ],
+            "predicted_blue": [
+              2,
+              12,
+              13
+            ],
+            "actual_red": [
+              6,
+              7,
+              14,
+              22,
+              31,
+              32
+            ],
+            "actual_blue": 5,
+            "red_match": 0,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026112",
+            "predicted_red": [
+              6,
+              11,
+              12,
+              15,
+              16,
+              21,
               27
             ],
             "predicted_blue": [
               1,
+              5,
+              9
+            ],
+            "actual_red": [
+              1,
+              4,
+              11,
+              12,
+              17,
+              29
+            ],
+            "actual_blue": 11,
+            "red_match": 2,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026113",
+            "predicted_red": [
+              2,
+              9,
+              10,
+              13,
+              14,
+              25,
+              27
+            ],
+            "predicted_blue": [
+              1,
+              7,
+              12
+            ],
+            "actual_red": [
+              3,
+              4,
+              20,
+              24,
+              29,
+              30
+            ],
+            "actual_blue": 11,
+            "red_match": 0,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          }
+        ],
+        "fortune_stats": {
+          "eligible_rate": 0.04,
+          "profit_rate": 0.04,
+          "total_fortune": 240,
+          "total_cost": 4200,
+          "net_fortune": -3960
+        }
+      },
+      "遗漏优先": {
+        "avg_red_match": 1.27,
+        "blue_accuracy": 0.22,
+        "distribution": {
+          "0": 22,
+          "1": 44,
+          "2": 21,
+          "3": 11,
+          "4": 2
+        },
+        "details": [
+          {
+            "period": "2026109",
+            "predicted_red": [
+              3,
+              8,
+              10,
+              16,
+              18,
+              21,
+              25
+            ],
+            "predicted_blue": [
+              5,
               6,
-              10
+              13
+            ],
+            "actual_red": [
+              9,
+              12,
+              15,
+              26,
+              30,
+              33
+            ],
+            "actual_blue": 6,
+            "red_match": 0,
+            "blue_match": 1,
+            "prize": "六等奖(含)",
+            "prize_amount": 35,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026110",
+            "predicted_red": [
+              7,
+              8,
+              16,
+              18,
+              21,
+              23,
+              32
+            ],
+            "predicted_blue": [
+              5,
+              10,
+              11
+            ],
+            "actual_red": [
+              2,
+              5,
+              16,
+              19,
+              26,
+              32
+            ],
+            "actual_blue": 14,
+            "red_match": 2,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026111",
+            "predicted_red": [
+              3,
+              4,
+              10,
+              18,
+              27,
+              29,
+              31
+            ],
+            "predicted_blue": [
+              1,
+              10,
+              11
+            ],
+            "actual_red": [
+              6,
+              7,
+              14,
+              22,
+              31,
+              32
+            ],
+            "actual_blue": 5,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026112",
+            "predicted_red": [
+              1,
+              8,
+              10,
+              17,
+              18,
+              25,
+              27
+            ],
+            "predicted_blue": [
+              1,
+              7,
+              11
+            ],
+            "actual_red": [
+              1,
+              4,
+              11,
+              12,
+              17,
+              29
+            ],
+            "actual_blue": 11,
+            "red_match": 2,
+            "blue_match": 1,
+            "prize": "六等奖(含)",
+            "prize_amount": 35,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026113",
+            "predicted_red": [
+              3,
+              10,
+              13,
+              18,
+              20,
+              23,
+              27
+            ],
+            "predicted_blue": [
+              7,
+              12,
+              13
             ],
             "actual_red": [
               3,
@@ -1110,29 +1645,209 @@
           "net_fortune": -3600
         }
       },
-      "三区均衡": {
+      "和值控制": {
         "avg_red_match": 1.34,
-        "blue_accuracy": 0.2,
+        "blue_accuracy": 0.15,
         "distribution": {
-          "1": 40,
-          "3": 8,
-          "2": 35,
-          "0": 17
+          "1": 36,
+          "2": 32,
+          "0": 21,
+          "3": 10,
+          "4": 1
         },
         "details": [
           {
             "period": "2026109",
             "predicted_red": [
-              7,
-              10,
+              3,
+              8,
+              11,
               14,
+              23,
+              28,
+              29
+            ],
+            "predicted_blue": [
+              10,
+              12,
+              15
+            ],
+            "actual_red": [
+              9,
+              12,
               15,
-              22,
+              26,
+              30,
+              33
+            ],
+            "actual_blue": 6,
+            "red_match": 0,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026110",
+            "predicted_red": [
+              5,
+              9,
+              11,
+              14,
+              27,
+              30,
+              31
+            ],
+            "predicted_blue": [
+              4,
+              5,
+              11
+            ],
+            "actual_red": [
+              2,
+              5,
+              16,
+              19,
               26,
               32
             ],
-            "predicted_blue": [
+            "actual_blue": 14,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026111",
+            "predicted_red": [
+              4,
               6,
+              16,
+              18,
+              27,
+              31,
+              32
+            ],
+            "predicted_blue": [
+              1,
+              4,
+              9
+            ],
+            "actual_red": [
+              6,
+              7,
+              14,
+              22,
+              31,
+              32
+            ],
+            "actual_blue": 5,
+            "red_match": 3,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": true,
+            "fortune_amount": 60
+          },
+          {
+            "period": "2026112",
+            "predicted_red": [
+              1,
+              5,
+              10,
+              18,
+              20,
+              23,
+              31
+            ],
+            "predicted_blue": [
+              3,
+              6,
+              8
+            ],
+            "actual_red": [
+              1,
+              4,
+              11,
+              12,
+              17,
+              29
+            ],
+            "actual_blue": 11,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026113",
+            "predicted_red": [
+              5,
+              8,
+              11,
+              12,
+              14,
+              21,
+              29
+            ],
+            "predicted_blue": [
+              5,
+              8,
+              12
+            ],
+            "actual_red": [
+              3,
+              4,
+              20,
+              24,
+              29,
+              30
+            ],
+            "actual_blue": 11,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          }
+        ],
+        "fortune_stats": {
+          "eligible_rate": 0.1,
+          "profit_rate": 0.1,
+          "total_fortune": 600,
+          "total_cost": 4200,
+          "net_fortune": -3600
+        }
+      },
+      "连号感知": {
+        "avg_red_match": 1.2,
+        "blue_accuracy": 0.15,
+        "distribution": {
+          "2": 25,
+          "3": 10,
+          "1": 40,
+          "0": 25
+        },
+        "details": [
+          {
+            "period": "2026109",
+            "predicted_red": [
+              4,
+              6,
+              9,
+              10,
+              21,
+              22,
+              32
+            ],
+            "predicted_blue": [
+              1,
               12,
               16
             ],
@@ -1145,28 +1860,28 @@
               33
             ],
             "actual_blue": 6,
-            "red_match": 2,
-            "blue_match": 1,
-            "prize": "六等奖(含)",
-            "prize_amount": 35,
+            "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
             "fortune_eligible": false,
             "fortune_amount": 0
           },
           {
             "period": "2026110",
             "predicted_red": [
+              2,
+              6,
               9,
-              11,
               12,
-              20,
-              25,
-              29,
+              22,
+              31,
               33
             ],
             "predicted_blue": [
+              1,
               3,
-              4,
-              9
+              15
             ],
             "actual_red": [
               2,
@@ -1177,7 +1892,7 @@
               32
             ],
             "actual_blue": 14,
-            "red_match": 0,
+            "red_match": 1,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -1187,18 +1902,18 @@
           {
             "period": "2026111",
             "predicted_red": [
-              3,
-              8,
               9,
-              15,
-              20,
+              11,
+              13,
+              14,
+              26,
               28,
-              32
+              31
             ],
             "predicted_blue": [
-              5,
-              6,
-              10
+              4,
+              9,
+              14
             ],
             "actual_red": [
               6,
@@ -1209,27 +1924,27 @@
               32
             ],
             "actual_blue": 5,
-            "red_match": 1,
-            "blue_match": 1,
-            "prize": "六等奖(含)",
-            "prize_amount": 35,
+            "red_match": 2,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
             "fortune_eligible": false,
             "fortune_amount": 0
           },
           {
             "period": "2026112",
             "predicted_red": [
-              2,
-              6,
-              16,
-              21,
-              30,
-              31,
-              32
+              4,
+              7,
+              8,
+              14,
+              25,
+              26,
+              27
             ],
             "predicted_blue": [
               5,
-              13,
+              9,
               16
             ],
             "actual_red": [
@@ -1241,7 +1956,7 @@
               29
             ],
             "actual_blue": 11,
-            "red_match": 0,
+            "red_match": 1,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -1251,18 +1966,18 @@
           {
             "period": "2026113",
             "predicted_red": [
-              1,
               4,
-              6,
+              7,
+              10,
+              11,
               12,
               17,
-              23,
-              33
+              31
             ],
             "predicted_blue": [
-              1,
               3,
-              8
+              7,
+              15
             ],
             "actual_red": [
               3,
@@ -1274,6 +1989,186 @@
             ],
             "actual_blue": 11,
             "red_match": 1,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          }
+        ],
+        "fortune_stats": {
+          "eligible_rate": 0.09,
+          "profit_rate": 0.09,
+          "total_fortune": 540,
+          "total_cost": 4200,
+          "net_fortune": -3660
+        }
+      },
+      "福运优化": {
+        "avg_red_match": 1.21,
+        "blue_accuracy": 0.22,
+        "distribution": {
+          "3": 5,
+          "2": 30,
+          "1": 38,
+          "0": 25,
+          "4": 2
+        },
+        "details": [
+          {
+            "period": "2026109",
+            "predicted_red": [
+              4,
+              7,
+              8,
+              16,
+              23,
+              27,
+              31
+            ],
+            "predicted_blue": [
+              2,
+              10,
+              16
+            ],
+            "actual_red": [
+              9,
+              12,
+              15,
+              26,
+              30,
+              33
+            ],
+            "actual_blue": 6,
+            "red_match": 0,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026110",
+            "predicted_red": [
+              10,
+              11,
+              16,
+              17,
+              20,
+              23,
+              26
+            ],
+            "predicted_blue": [
+              4,
+              6,
+              13
+            ],
+            "actual_red": [
+              2,
+              5,
+              16,
+              19,
+              26,
+              32
+            ],
+            "actual_blue": 14,
+            "red_match": 2,
+            "blue_match": 0,
+            "prize": null,
+            "prize_amount": 0,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026111",
+            "predicted_red": [
+              3,
+              11,
+              14,
+              17,
+              26,
+              32,
+              33
+            ],
+            "predicted_blue": [
+              5,
+              10,
+              16
+            ],
+            "actual_red": [
+              6,
+              7,
+              14,
+              22,
+              31,
+              32
+            ],
+            "actual_blue": 5,
+            "red_match": 2,
+            "blue_match": 1,
+            "prize": "六等奖(含)",
+            "prize_amount": 35,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026112",
+            "predicted_red": [
+              2,
+              10,
+              19,
+              21,
+              23,
+              26,
+              29
+            ],
+            "predicted_blue": [
+              4,
+              10,
+              11
+            ],
+            "actual_red": [
+              1,
+              4,
+              11,
+              12,
+              17,
+              29
+            ],
+            "actual_blue": 11,
+            "red_match": 1,
+            "blue_match": 1,
+            "prize": "六等奖(含)",
+            "prize_amount": 35,
+            "fortune_eligible": false,
+            "fortune_amount": 0
+          },
+          {
+            "period": "2026113",
+            "predicted_red": [
+              6,
+              10,
+              11,
+              19,
+              20,
+              25,
+              29
+            ],
+            "predicted_blue": [
+              3,
+              10,
+              16
+            ],
+            "actual_red": [
+              3,
+              4,
+              20,
+              24,
+              29,
+              30
+            ],
+            "actual_blue": 11,
+            "red_match": 2,
             "blue_match": 0,
             "prize": null,
             "prize_amount": 0,
@@ -1288,941 +2183,41 @@
           "total_cost": 4200,
           "net_fortune": -3840
         }
-      },
-      "冷热混合": {
-        "avg_red_match": 1.42,
-        "blue_accuracy": 0.19,
-        "distribution": {
-          "1": 37,
-          "2": 37,
-          "0": 16,
-          "4": 1,
-          "3": 9
-        },
-        "details": [
-          {
-            "period": "2026109",
-            "predicted_red": [
-              1,
-              9,
-              14,
-              21,
-              25,
-              30,
-              31
-            ],
-            "predicted_blue": [
-              8,
-              11,
-              16
-            ],
-            "actual_red": [
-              9,
-              12,
-              15,
-              26,
-              30,
-              33
-            ],
-            "actual_blue": 6,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026110",
-            "predicted_red": [
-              2,
-              10,
-              15,
-              16,
-              25,
-              28,
-              31
-            ],
-            "predicted_blue": [
-              1,
-              10,
-              14
-            ],
-            "actual_red": [
-              2,
-              5,
-              16,
-              19,
-              26,
-              32
-            ],
-            "actual_blue": 14,
-            "red_match": 2,
-            "blue_match": 1,
-            "prize": "六等奖(含)",
-            "prize_amount": 35,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026111",
-            "predicted_red": [
-              4,
-              8,
-              12,
-              13,
-              22,
-              25,
-              31
-            ],
-            "predicted_blue": [
-              3,
-              10,
-              14
-            ],
-            "actual_red": [
-              6,
-              7,
-              14,
-              22,
-              31,
-              32
-            ],
-            "actual_blue": 5,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026112",
-            "predicted_red": [
-              1,
-              12,
-              13,
-              16,
-              18,
-              26,
-              31
-            ],
-            "predicted_blue": [
-              13,
-              15,
-              16
-            ],
-            "actual_red": [
-              1,
-              4,
-              11,
-              12,
-              17,
-              29
-            ],
-            "actual_blue": 11,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026113",
-            "predicted_red": [
-              1,
-              7,
-              13,
-              25,
-              29,
-              30,
-              31
-            ],
-            "predicted_blue": [
-              2,
-              5,
-              16
-            ],
-            "actual_red": [
-              3,
-              4,
-              20,
-              24,
-              29,
-              30
-            ],
-            "actual_blue": 11,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          }
-        ],
-        "fortune_stats": {
-          "eligible_rate": 0.08,
-          "profit_rate": 0.08,
-          "total_fortune": 480,
-          "total_cost": 4200,
-          "net_fortune": -3720
-        }
-      },
-      "遗漏优先": {
-        "avg_red_match": 1.19,
-        "blue_accuracy": 0.24,
-        "distribution": {
-          "1": 39,
-          "3": 6,
-          "2": 29,
-          "0": 25,
-          "4": 1
-        },
-        "details": [
-          {
-            "period": "2026109",
-            "predicted_red": [
-              7,
-              10,
-              16,
-              21,
-              23,
-              25,
-              26
-            ],
-            "predicted_blue": [
-              5,
-              6,
-              10
-            ],
-            "actual_red": [
-              9,
-              12,
-              15,
-              26,
-              30,
-              33
-            ],
-            "actual_blue": 6,
-            "red_match": 1,
-            "blue_match": 1,
-            "prize": "六等奖(含)",
-            "prize_amount": 35,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026110",
-            "predicted_red": [
-              7,
-              18,
-              21,
-              23,
-              25,
-              27,
-              29
-            ],
-            "predicted_blue": [
-              1,
-              11,
-              13
-            ],
-            "actual_red": [
-              2,
-              5,
-              16,
-              19,
-              26,
-              32
-            ],
-            "actual_blue": 14,
-            "red_match": 0,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026111",
-            "predicted_red": [
-              4,
-              8,
-              10,
-              23,
-              25,
-              27,
-              29
-            ],
-            "predicted_blue": [
-              7,
-              10,
-              11
-            ],
-            "actual_red": [
-              6,
-              7,
-              14,
-              22,
-              31,
-              32
-            ],
-            "actual_blue": 5,
-            "red_match": 0,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026112",
-            "predicted_red": [
-              1,
-              10,
-              17,
-              18,
-              21,
-              23,
-              25
-            ],
-            "predicted_blue": [
-              1,
-              7,
-              13
-            ],
-            "actual_red": [
-              1,
-              4,
-              11,
-              12,
-              17,
-              29
-            ],
-            "actual_blue": 11,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026113",
-            "predicted_red": [
-              3,
-              10,
-              18,
-              24,
-              25,
-              27,
-              28
-            ],
-            "predicted_blue": [
-              1,
-              2,
-              13
-            ],
-            "actual_red": [
-              3,
-              4,
-              20,
-              24,
-              29,
-              30
-            ],
-            "actual_blue": 11,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          }
-        ],
-        "fortune_stats": {
-          "eligible_rate": 0.05,
-          "profit_rate": 0.05,
-          "total_fortune": 300,
-          "total_cost": 4200,
-          "net_fortune": -3900
-        }
-      },
-      "和值控制": {
-        "avg_red_match": 1.19,
-        "blue_accuracy": 0.16,
-        "distribution": {
-          "1": 43,
-          "2": 24,
-          "0": 24,
-          "3": 8,
-          "4": 1
-        },
-        "details": [
-          {
-            "period": "2026109",
-            "predicted_red": [
-              5,
-              9,
-              13,
-              17,
-              19,
-              21,
-              28
-            ],
-            "predicted_blue": [
-              2,
-              3,
-              5
-            ],
-            "actual_red": [
-              9,
-              12,
-              15,
-              26,
-              30,
-              33
-            ],
-            "actual_blue": 6,
-            "red_match": 1,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026110",
-            "predicted_red": [
-              7,
-              12,
-              13,
-              14,
-              16,
-              21,
-              33
-            ],
-            "predicted_blue": [
-              6,
-              11,
-              16
-            ],
-            "actual_red": [
-              2,
-              5,
-              16,
-              19,
-              26,
-              32
-            ],
-            "actual_blue": 14,
-            "red_match": 1,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026111",
-            "predicted_red": [
-              5,
-              7,
-              13,
-              14,
-              17,
-              27,
-              28
-            ],
-            "predicted_blue": [
-              6,
-              7,
-              14
-            ],
-            "actual_red": [
-              6,
-              7,
-              14,
-              22,
-              31,
-              32
-            ],
-            "actual_blue": 5,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026112",
-            "predicted_red": [
-              4,
-              8,
-              10,
-              11,
-              18,
-              24,
-              31
-            ],
-            "predicted_blue": [
-              1,
-              4,
-              16
-            ],
-            "actual_red": [
-              1,
-              4,
-              11,
-              12,
-              17,
-              29
-            ],
-            "actual_blue": 11,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026113",
-            "predicted_red": [
-              6,
-              13,
-              14,
-              15,
-              24,
-              30,
-              31
-            ],
-            "predicted_blue": [
-              3,
-              8,
-              9
-            ],
-            "actual_red": [
-              3,
-              4,
-              20,
-              24,
-              29,
-              30
-            ],
-            "actual_blue": 11,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          }
-        ],
-        "fortune_stats": {
-          "eligible_rate": 0.08,
-          "profit_rate": 0.08,
-          "total_fortune": 480,
-          "total_cost": 4200,
-          "net_fortune": -3720
-        }
-      },
-      "连号感知": {
-        "avg_red_match": 1.22,
-        "blue_accuracy": 0.13,
-        "distribution": {
-          "1": 44,
-          "2": 21,
-          "0": 24,
-          "3": 8,
-          "4": 3
-        },
-        "details": [
-          {
-            "period": "2026109",
-            "predicted_red": [
-              1,
-              8,
-              10,
-              19,
-              23,
-              31,
-              32
-            ],
-            "predicted_blue": [
-              1,
-              9,
-              10
-            ],
-            "actual_red": [
-              9,
-              12,
-              15,
-              26,
-              30,
-              33
-            ],
-            "actual_blue": 6,
-            "red_match": 0,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026110",
-            "predicted_red": [
-              3,
-              4,
-              6,
-              18,
-              23,
-              25,
-              30
-            ],
-            "predicted_blue": [
-              2,
-              7,
-              8
-            ],
-            "actual_red": [
-              2,
-              5,
-              16,
-              19,
-              26,
-              32
-            ],
-            "actual_blue": 14,
-            "red_match": 0,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026111",
-            "predicted_red": [
-              17,
-              20,
-              22,
-              23,
-              24,
-              28,
-              29
-            ],
-            "predicted_blue": [
-              3,
-              5,
-              10
-            ],
-            "actual_red": [
-              6,
-              7,
-              14,
-              22,
-              31,
-              32
-            ],
-            "actual_blue": 5,
-            "red_match": 1,
-            "blue_match": 1,
-            "prize": "六等奖(含)",
-            "prize_amount": 35,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026112",
-            "predicted_red": [
-              2,
-              3,
-              7,
-              14,
-              21,
-              23,
-              26
-            ],
-            "predicted_blue": [
-              1,
-              2,
-              14
-            ],
-            "actual_red": [
-              1,
-              4,
-              11,
-              12,
-              17,
-              29
-            ],
-            "actual_blue": 11,
-            "red_match": 0,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026113",
-            "predicted_red": [
-              1,
-              7,
-              10,
-              11,
-              14,
-              18,
-              20
-            ],
-            "predicted_blue": [
-              4,
-              12,
-              14
-            ],
-            "actual_red": [
-              3,
-              4,
-              20,
-              24,
-              29,
-              30
-            ],
-            "actual_blue": 11,
-            "red_match": 1,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          }
-        ],
-        "fortune_stats": {
-          "eligible_rate": 0.1,
-          "profit_rate": 0.1,
-          "total_fortune": 600,
-          "total_cost": 4200,
-          "net_fortune": -3600
-        }
-      },
-      "福运优化": {
-        "avg_red_match": 1.48,
-        "blue_accuracy": 0.14,
-        "distribution": {
-          "1": 40,
-          "3": 12,
-          "2": 34,
-          "0": 13,
-          "4": 1
-        },
-        "details": [
-          {
-            "period": "2026109",
-            "predicted_red": [
-              7,
-              10,
-              14,
-              20,
-              26,
-              29,
-              33
-            ],
-            "predicted_blue": [
-              5,
-              9,
-              14
-            ],
-            "actual_red": [
-              9,
-              12,
-              15,
-              26,
-              30,
-              33
-            ],
-            "actual_blue": 6,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026110",
-            "predicted_red": [
-              1,
-              7,
-              12,
-              17,
-              26,
-              29,
-              32
-            ],
-            "predicted_blue": [
-              3,
-              10,
-              12
-            ],
-            "actual_red": [
-              2,
-              5,
-              16,
-              19,
-              26,
-              32
-            ],
-            "actual_blue": 14,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026111",
-            "predicted_red": [
-              4,
-              5,
-              17,
-              18,
-              19,
-              24,
-              31
-            ],
-            "predicted_blue": [
-              1,
-              9,
-              15
-            ],
-            "actual_red": [
-              6,
-              7,
-              14,
-              22,
-              31,
-              32
-            ],
-            "actual_blue": 5,
-            "red_match": 1,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026112",
-            "predicted_red": [
-              4,
-              6,
-              13,
-              17,
-              20,
-              32,
-              33
-            ],
-            "predicted_blue": [
-              5,
-              9,
-              14
-            ],
-            "actual_red": [
-              1,
-              4,
-              11,
-              12,
-              17,
-              29
-            ],
-            "actual_blue": 11,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          },
-          {
-            "period": "2026113",
-            "predicted_red": [
-              1,
-              10,
-              14,
-              19,
-              20,
-              23,
-              29
-            ],
-            "predicted_blue": [
-              1,
-              6,
-              14
-            ],
-            "actual_red": [
-              3,
-              4,
-              20,
-              24,
-              29,
-              30
-            ],
-            "actual_blue": 11,
-            "red_match": 2,
-            "blue_match": 0,
-            "prize": null,
-            "prize_amount": 0,
-            "fortune_eligible": false,
-            "fortune_amount": 0
-          }
-        ],
-        "fortune_stats": {
-          "eligible_rate": 0.11,
-          "profit_rate": 0.11,
-          "total_fortune": 660,
-          "total_cost": 4200,
-          "net_fortune": -3540
-        }
       }
     },
     "best_strategy": {
-      "name": "福运优化",
-      "avg_red_match": 1.48,
-      "improvement": 0.1988
+      "name": "和值控制",
+      "avg_red_match": 1.34,
+      "improvement": 0.0588
     },
     "ranking": [
       [
-        "福运优化",
-        1.48
-      ],
-      [
-        "冷热混合",
-        1.42
-      ],
-      [
-        "三区均衡",
+        "和值控制",
         1.34
       ],
       [
-        "智能加权",
-        1.3
+        "遗漏优先",
+        1.27
       ],
       [
-        "连号感知",
+        "三区均衡",
+        1.26
+      ],
+      [
+        "冷热混合",
         1.22
       ],
       [
-        "遗漏优先",
-        1.19
+        "福运优化",
+        1.21
       ],
       [
-        "和值控制",
-        1.19
+        "智能加权",
+        1.2
+      ],
+      [
+        "连号感知",
+        1.2
       ]
     ]
   },
@@ -2231,74 +2226,68 @@
     "test_periods": 100,
     "ticket_cost": 42,
     "match_stats": {
-      "avg_red_match": 1.33,
-      "blue_accuracy": 0.15,
+      "avg_red_match": 1.25,
+      "blue_accuracy": 0.23,
       "distribution": {
-        "3": 12,
-        "1": 39,
-        "2": 27,
-        "0": 21,
-        "4": 1
+        "1": 49,
+        "0": 19,
+        "2": 20,
+        "3": 12
       }
     },
     "fortune_stats": {
-      "eligible_count": 12,
-      "eligible_rate": 12.0,
-      "eligible_rate_desc": "12/100 期触发福运奖"
+      "eligible_count": 9,
+      "eligible_rate": 9.0,
+      "eligible_rate_desc": "9/100 期触发福运奖"
     },
     "profit_stats": {
       "total_cost": 4200,
-      "total_fortune": 720,
-      "total_regular_prize": 560,
-      "total_income": 1280,
-      "net_profit": -2920,
-      "roi": -69.52,
-      "profit_periods": 12,
-      "profit_rate": 12.0
+      "total_fortune": 540,
+      "total_regular_prize": 820,
+      "total_income": 1360,
+      "net_profit": -2840,
+      "roi": -67.62,
+      "profit_periods": 9,
+      "profit_rate": 9.0
     },
     "fortune_by_red_match": {
-      "3": {
-        "count": 12,
-        "fortune_eligible": 11,
-        "fortune_amount": 660
-      },
       "1": {
-        "count": 39,
-        "fortune_eligible": 0,
-        "fortune_amount": 0
-      },
-      "2": {
-        "count": 27,
+        "count": 49,
         "fortune_eligible": 0,
         "fortune_amount": 0
       },
       "0": {
-        "count": 21,
+        "count": 19,
         "fortune_eligible": 0,
         "fortune_amount": 0
       },
-      "4": {
-        "count": 1,
-        "fortune_eligible": 1,
-        "fortune_amount": 60
+      "2": {
+        "count": 20,
+        "fortune_eligible": 0,
+        "fortune_amount": 0
+      },
+      "3": {
+        "count": 12,
+        "fortune_eligible": 9,
+        "fortune_amount": 540
       }
     },
     "details": [
       {
         "period": "2026104",
         "predicted_red": [
-          1,
           4,
-          12,
-          14,
-          29,
-          32,
-          33
+          10,
+          11,
+          15,
+          21,
+          26,
+          29
         ],
         "predicted_blue": [
           3,
-          8,
-          14
+          9,
+          15
         ],
         "actual_red": [
           11,
@@ -2319,18 +2308,18 @@
       {
         "period": "2026105",
         "predicted_red": [
-          2,
-          5,
-          9,
-          13,
+          6,
+          7,
+          16,
+          19,
+          21,
           28,
-          29,
           32
         ],
         "predicted_blue": [
-          5,
-          7,
-          12
+          1,
+          9,
+          13
         ],
         "actual_red": [
           2,
@@ -2341,7 +2330,7 @@
           30
         ],
         "actual_blue": 8,
-        "red_match": 2,
+        "red_match": 0,
         "blue_match": 0,
         "prize": null,
         "prize_amount": 0,
@@ -2351,18 +2340,18 @@
       {
         "period": "2026106",
         "predicted_red": [
-          3,
-          12,
-          13,
-          17,
-          22,
-          24,
-          30
+          7,
+          8,
+          14,
+          15,
+          23,
+          26,
+          29
         ],
         "predicted_blue": [
-          5,
-          10,
-          15
+          2,
+          9,
+          12
         ],
         "actual_red": [
           6,
@@ -2373,28 +2362,28 @@
           30
         ],
         "actual_blue": 14,
-        "red_match": 3,
+        "red_match": 1,
         "blue_match": 0,
         "prize": null,
         "prize_amount": 0,
-        "fortune_eligible": true,
-        "fortune_amount": 60
+        "fortune_eligible": false,
+        "fortune_amount": 0
       },
       {
         "period": "2026107",
         "predicted_red": [
-          5,
-          10,
-          14,
-          19,
-          25,
-          26,
+          1,
+          4,
+          12,
+          22,
+          23,
+          31,
           33
         ],
         "predicted_blue": [
-          5,
-          7,
-          14
+          3,
+          9,
+          15
         ],
         "actual_red": [
           1,
@@ -2416,17 +2405,17 @@
         "period": "2026108",
         "predicted_red": [
           2,
-          5,
+          9,
+          12,
           15,
-          17,
-          20,
-          21,
-          32
+          18,
+          26,
+          27
         ],
         "predicted_blue": [
-          1,
-          9,
-          15
+          4,
+          7,
+          11
         ],
         "actual_red": [
           6,
@@ -2437,7 +2426,7 @@
           28
         ],
         "actual_blue": 16,
-        "red_match": 1,
+        "red_match": 0,
         "blue_match": 0,
         "prize": null,
         "prize_amount": 0,
@@ -2447,18 +2436,18 @@
       {
         "period": "2026109",
         "predicted_red": [
+          2,
           3,
-          5,
-          17,
+          10,
           20,
-          24,
-          32,
-          33
+          27,
+          29,
+          31
         ],
         "predicted_blue": [
-          5,
-          8,
-          11
+          3,
+          10,
+          13
         ],
         "actual_red": [
           9,
@@ -2469,7 +2458,7 @@
           33
         ],
         "actual_blue": 6,
-        "red_match": 1,
+        "red_match": 0,
         "blue_match": 0,
         "prize": null,
         "prize_amount": 0,
@@ -2479,18 +2468,18 @@
       {
         "period": "2026110",
         "predicted_red": [
-          7,
-          8,
-          14,
+          3,
+          6,
           19,
-          29,
-          31,
-          32
+          20,
+          27,
+          32,
+          33
         ],
         "predicted_blue": [
-          2,
-          9,
-          14
+          4,
+          7,
+          15
         ],
         "actual_red": [
           2,
@@ -2502,26 +2491,26 @@
         ],
         "actual_blue": 14,
         "red_match": 2,
-        "blue_match": 1,
-        "prize": "六等奖(含)",
-        "prize_amount": 35,
+        "blue_match": 0,
+        "prize": null,
+        "prize_amount": 0,
         "fortune_eligible": false,
         "fortune_amount": 0
       },
       {
         "period": "2026111",
         "predicted_red": [
-          1,
-          4,
-          20,
-          22,
-          27,
-          31,
+          8,
+          11,
+          14,
+          17,
+          19,
+          28,
           33
         ],
         "predicted_blue": [
-          5,
-          7,
+          2,
+          10,
           14
         ],
         "actual_red": [
@@ -2533,28 +2522,28 @@
           32
         ],
         "actual_blue": 5,
-        "red_match": 2,
-        "blue_match": 1,
-        "prize": "六等奖(含)",
-        "prize_amount": 35,
+        "red_match": 1,
+        "blue_match": 0,
+        "prize": null,
+        "prize_amount": 0,
         "fortune_eligible": false,
         "fortune_amount": 0
       },
       {
         "period": "2026112",
         "predicted_red": [
-          7,
-          9,
-          12,
-          20,
-          27,
+          1,
+          2,
+          16,
+          21,
+          22,
           28,
-          32
+          31
         ],
         "predicted_blue": [
-          3,
+          2,
           10,
-          14
+          11
         ],
         "actual_red": [
           1,
@@ -2566,27 +2555,27 @@
         ],
         "actual_blue": 11,
         "red_match": 1,
-        "blue_match": 0,
-        "prize": null,
-        "prize_amount": 0,
+        "blue_match": 1,
+        "prize": "六等奖(含)",
+        "prize_amount": 35,
         "fortune_eligible": false,
         "fortune_amount": 0
       },
       {
         "period": "2026113",
         "predicted_red": [
-          4,
           5,
-          10,
+          7,
+          16,
+          19,
           20,
-          21,
-          29,
-          31
+          27,
+          32
         ],
         "predicted_blue": [
           4,
-          6,
-          13
+          8,
+          11
         ],
         "actual_red": [
           3,
@@ -2597,44 +2586,43 @@
           30
         ],
         "actual_blue": 11,
-        "red_match": 3,
-        "blue_match": 0,
-        "prize": null,
-        "prize_amount": 0,
-        "fortune_eligible": true,
-        "fortune_amount": 60
+        "red_match": 1,
+        "blue_match": 1,
+        "prize": "六等奖(含)",
+        "prize_amount": 35,
+        "fortune_eligible": false,
+        "fortune_amount": 0
       }
     ],
     "summary": {
       "conclusion": "亏损",
-      "avg_per_period": -29.2,
-      "fortune_contribution": 56.25
+      "avg_per_period": -28.4,
+      "fortune_contribution": 39.71
     }
   },
-  "avg_red_match": 1.24,
+  "avg_red_match": 1.21,
   "avg_random_match": 1.0928,
-  "improvement": 0.1472,
-  "improvement_percent": 13.47,
-  "blue_accuracy": 0.06,
+  "improvement": 0.1172,
+  "improvement_percent": 10.72,
+  "blue_accuracy": 0.08,
   "distribution": {
-    "3": 6,
-    "0": 20,
-    "2": 29,
-    "1": 44,
-    "4": 1
+    "1": 41,
+    "2": 28,
+    "0": 23,
+    "3": 8
   },
   "details": [
     {
       "period": "2026109",
       "predicted_red": [
-        10,
-        13,
+        12,
         18,
-        24,
+        22,
         25,
-        30
+        26,
+        28
       ],
-      "predicted_blue": 4,
+      "predicted_blue": 12,
       "actual_red": [
         9,
         12,
@@ -2644,7 +2632,7 @@
         33
       ],
       "actual_blue": 6,
-      "red_match": 1,
+      "red_match": 2,
       "blue_match": 0,
       "prize": null,
       "prize_amount": 0,
@@ -2654,14 +2642,14 @@
     {
       "period": "2026110",
       "predicted_red": [
-        5,
-        14,
-        24,
+        4,
+        20,
+        25,
         27,
-        32,
+        30,
         33
       ],
-      "predicted_blue": 2,
+      "predicted_blue": 5,
       "actual_red": [
         2,
         5,
@@ -2671,7 +2659,7 @@
         32
       ],
       "actual_blue": 14,
-      "red_match": 2,
+      "red_match": 0,
       "blue_match": 0,
       "prize": null,
       "prize_amount": 0,
@@ -2681,14 +2669,14 @@
     {
       "period": "2026111",
       "predicted_red": [
-        6,
-        12,
-        14,
-        15,
-        21,
-        27
+        3,
+        5,
+        9,
+        20,
+        28,
+        32
       ],
-      "predicted_blue": 13,
+      "predicted_blue": 2,
       "actual_red": [
         6,
         7,
@@ -2698,7 +2686,7 @@
         32
       ],
       "actual_blue": 5,
-      "red_match": 2,
+      "red_match": 1,
       "blue_match": 0,
       "prize": null,
       "prize_amount": 0,
@@ -2708,14 +2696,14 @@
     {
       "period": "2026112",
       "predicted_red": [
-        11,
-        14,
-        16,
-        19,
-        22,
-        32
+        1,
+        6,
+        7,
+        10,
+        21,
+        31
       ],
-      "predicted_blue": 2,
+      "predicted_blue": 1,
       "actual_red": [
         1,
         4,
@@ -2736,13 +2724,13 @@
       "period": "2026113",
       "predicted_red": [
         1,
-        5,
-        13,
-        20,
-        28,
-        30
+        6,
+        12,
+        14,
+        15,
+        23
       ],
-      "predicted_blue": 11,
+      "predicted_blue": 7,
       "actual_red": [
         3,
         4,
@@ -2752,39 +2740,39 @@
         30
       ],
       "actual_blue": 11,
-      "red_match": 2,
-      "blue_match": 1,
-      "prize": "六等奖",
-      "prize_amount": 5,
+      "red_match": 0,
+      "blue_match": 0,
+      "prize": null,
+      "prize_amount": 0,
       "fortune_eligible": false,
       "fortune_amount": 0
     }
   ],
-  "best_strategy_name": "冷热混合",
+  "best_strategy_name": "连号感知",
   "ranking": [
     [
       "智能加权",
-      1.06
-    ],
-    [
-      "三区均衡",
-      0.99
-    ],
-    [
-      "冷热混合",
-      1.24
-    ],
-    [
-      "遗漏优先",
       1.0
     ],
     [
+      "三区均衡",
+      1.02
+    ],
+    [
+      "冷热混合",
+      1.13
+    ],
+    [
+      "遗漏优先",
+      1.04
+    ],
+    [
       "和值控制",
-      0.98
+      0.93
     ],
     [
       "连号感知",
-      1.23
+      1.21
     ]
   ]
 }
